@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 require("../models/employee");
+import { ObjectID } from 'bson';
+import { Request, Response, NextFunction } from 'express'
+
 
 let Employee = mongoose.model("Employee");
 
 // Get All Employees
-export const getAllEmployees = (request: any, response:  any, next:any) => {
+export const getAllEmployees = (request: Request, response:  Response, next:NextFunction) => {
     Employee.find({})
         .then((data: any) => {
             response.status(200).json(data);
@@ -15,9 +18,9 @@ export const getAllEmployees = (request: any, response:  any, next:any) => {
 };
 
 // Get Employee By ID
-export const getEmployeeByID = (request: any, response:  any, next:any) => {
+export const getEmployeeByID = (request: Request, response:  Response, next:NextFunction) => {
     Employee.findOne({ _id: request.params.id })
-        .then((data : any) => {
+        .then((data : string) => {
             if (data == null) next(new Error(" Employee not found"));
             response.status(200).json(data);
         })
@@ -27,7 +30,7 @@ export const getEmployeeByID = (request: any, response:  any, next:any) => {
 };
 
 // Create Employee
-export const createEmployee = (request: any, response:  any, next:any) => {
+export const createEmployee = (request: Request, response:  Response, next:NextFunction) => {
     let object = new Employee({
         name: request.body.name,
         age: request.body.age,
@@ -43,7 +46,7 @@ export const createEmployee = (request: any, response:  any, next:any) => {
 };
 
 // Update Employee By ID
-export const updateEmployee = (request: any, response:  any, next:any) => {
+export const updateEmployee = (request: Request, response:  Response, next:NextFunction) => {
     // console.log(request.body.id);
     Employee.findById(request.body.id)
         .then((data: { [x: string]: any; save: () => void; }) => {
@@ -59,9 +62,9 @@ export const updateEmployee = (request: any, response:  any, next:any) => {
 };
 
 // Delete Employee By ID
-export const deleteEmployee = (request: any, response:  any, next:any) => {
+export const deleteEmployee = (request: Request, response:  Response, next:NextFunction) => {
     Employee.deleteOne({ _id: request.params.id })
-        .then((data: any) => {
+        .then((data: ObjectID) => {
             if (!data) {
                 next(new Error(" Employee not found"));
             } else {

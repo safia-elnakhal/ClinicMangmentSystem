@@ -1,5 +1,6 @@
 // import * as express from "express";
 import express = require('express');
+import { Request, Response, NextFunction } from 'express'
 import morgan = require("morgan");
 import * as mongoose from "mongoose";
 import cors = require("cors");
@@ -29,13 +30,13 @@ app.use(routes)
 
 
 // not-found middleware
-app.use((request:any, response:any, next:any) => {
+app.use((request:Request, response:Response, next:NextFunction) => {
   // throw new Error("very big error"); //throwing an error causes the error handling middleware to work
   response.status(404).json({ message: "Endpoint not found." });
 });
 
 // handling errors middleware
-app.use((error:any, request:any, response:any, next:any) => {
+app.use((error:any, request:Request, response:Response, next:NextFunction) => {
   response
     .status(error.status || 500)
     .json({ message: "Internal Error", details: error.message });
