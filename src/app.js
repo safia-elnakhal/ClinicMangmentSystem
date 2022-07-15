@@ -1,37 +1,34 @@
-const express = require("express");
+"use strict";
+exports.__esModule = true;
+// import * as express from "express";
+var express = require("express");
+var morgan = require("morgan");
+var mongoose = require("mongoose");
 var cors = require("cors");
-const morgan = require("morgan");
-const mongoose = require("mongoose");
 require("dotenv").config();
-
-const app = express();
-const port = process.env.PORT || 8080;
-
-const cmsDB_URL = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`;
+var app = express();
+var port = process.env.PORT || 8080;
+var cmsDB_URL = "mongodb://".concat(process.env.DB_HOST, ":").concat(process.env.DB_PORT, "/").concat(process.env.DB_NAME);
 mongoose
-  .connect(cmsDB_URL)
-  .then(() => {
-    app.listen(port, () => {
-      console.log("App listens on port", port);
+    .connect(cmsDB_URL)
+    .then(function () {
+    app.listen(port, function () {
+        console.log("App listens on port", port);
     });
-  })
-  .catch((error) => {
+})["catch"](function (error) {
     console.log("DB Connection Error", error);
-  });
-
+});
 app.use(cors());
 app.use(morgan(":method :url :status - :response-time ms"));
 app.use(express.json());
-
 // not-found middleware
-app.use((request, response, next) => {
-  // throw new Error("very big error"); //throwing an error causes the error handling middleware to work
-  response.status(404).json({ message: "Endpoint not found." });
+app.use(function (request, response, next) {
+    // throw new Error("very big error"); //throwing an error causes the error handling middleware to work
+    response.status(404).json({ message: "Endpoint not found." });
 });
-
 // handling errors middleware
-app.use((error, request, response, next) => {
-  response
-    .status(error.status || 500)
-    .json({ message: "Internal Error", details: error.message });
+app.use(function (error, request, response, next) {
+    response
+        .status(error.status || 500)
+        .json({ message: "Internal Error", details: error.message });
 });

@@ -4,7 +4,7 @@ require("../models/employee");
 let Employee = mongoose.model("Employee");
 
 // Get All Employees
-module.exports.getAllEmployees = (request: any, response: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: any): void; new(): any; }; }; }, next: (arg0: any) => void) => {
+export const getAllEmployees = (request: any, response:  any, next:any) => {
     Employee.find({})
         .then((data: any) => {
             response.status(200).json(data);
@@ -15,7 +15,7 @@ module.exports.getAllEmployees = (request: any, response: { status: (arg0: numbe
 };
 
 // Get Employee By ID
-module.exports.getEmployeeByID = (request: { params: { id: any; }; }, response: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: any): void; new(): any; }; }; }, next: (arg0: Error) => void) => {
+export const getEmployeeByID = (request: any, response:  any, next:any) => {
     Employee.findOne({ _id: request.params.id })
         .then((data : any) => {
             if (data == null) next(new Error(" Employee not found"));
@@ -27,7 +27,7 @@ module.exports.getEmployeeByID = (request: { params: { id: any; }; }, response: 
 };
 
 // Create Employee
-module.exports.createEmployee = (request: { body: { fullName: any; age: any; email: any; password: any; phone: any; national_id: any; image: any; }; }, response: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { data: string; }): void; new(): any; }; }; }, next: (arg0: any) => any) => {
+export const createEmployee = (request: any, response:  any, next:any) => {
     let object = new Employee({
         fullName: request.body.fullName,
         age: request.body.age,
@@ -46,7 +46,7 @@ module.exports.createEmployee = (request: { body: { fullName: any; age: any; ema
 };
 
 // Update Employee By ID
-module.exports.updateEmployee = (request: { body: { [x: string]: any; id: any; }; }, response: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { data: string; }): void; new(): any; }; }; }, next: (arg0: any) => void) => {
+export const updateEmployee = (request: any, response:  any, next:any) => {
     // console.log(request.body.id);
     Employee.findById(request.body.id)
         .then((data: { [x: string]: any; save: () => void; }) => {
@@ -62,7 +62,7 @@ module.exports.updateEmployee = (request: { body: { [x: string]: any; id: any; }
 };
 
 // Delete Employee By ID
-module.exports.deleteEmployee = (request: { params: { id: any; }; }, response: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { data: string; }): void; new(): any; }; }; }, next: (arg0: Error) => void) => {
+export const deleteEmployee = (request: any, response:  any, next:any) => {
     Employee.deleteOne({ _id: request.params.id })
         .then((data: any) => {
             if (!data) {
@@ -75,3 +75,6 @@ module.exports.deleteEmployee = (request: { params: { id: any; }; }, response: {
             next(error);
         });
 };
+
+
+

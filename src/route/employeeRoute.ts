@@ -1,24 +1,24 @@
-import express from "express"
-import * as employeeController from "../controller/employeeController";
+import * as express from "express"
+import * as Controller from "../controller/employeeController";
 const router = express.Router();
 
 router
   .route("/employee")
-  .get(employeeController.getAllAdmins)
+  .get(Controller.getAllEmployees)
   .post(
-    employeeController.createEmployee
+      Controller.createEmployee
   )
   .put(
-    employeeController.updateEmployee
+    Controller.updateEmployee
   );
 
 router
   .route("/employee/:id")
   .get(
-    employeeController.getEmployeeByID
+    Controller.getEmployeeByID
   )
   .delete(
-    employeeController.deleteEmployee
+    Controller.deleteEmployee
   );
 
 module.exports = router;
