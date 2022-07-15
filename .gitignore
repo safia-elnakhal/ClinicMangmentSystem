@@ -1,0 +1,8 @@
+# npm files & folders
+node_modules
+package-lock.json
+
+# project-related files
+db
+.env
+
