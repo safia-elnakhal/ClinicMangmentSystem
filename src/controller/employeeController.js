@@ -1,0 +1,68 @@
+var mongoose = require("mongoose");
+require("../models/employee");
+var Employee = mongoose.model("Employee");
+// Get All Employees
+module.exports.getAllEmployees = function (request, response, next) {
+    Employee.find({})
+        .then(function (data) {
+        response.status(200).json(data);
+    })["catch"](function (error) {
+        next(error);
+    });
+};
+// Get Employee By ID
+module.exports.getEmployeeByID = function (request, response, next) {
+    Employee.findOne({ _id: request.params.id })
+        .then(function (data) {
+        if (data == null)
+            next(new Error(" Employee not found"));
+        response.status(200).json(data);
+    })["catch"](function (error) {
+        next(error);
+    });
+};
+// Create Employee
+module.exports.createEmployee = function (request, response, next) {
+    var object = new Employee({
+        fullName: request.body.fullName,
+        age: request.body.age,
+        email: request.body.email,
+        password: request.body.password,
+        phone: request.body.phone,
+        national_id: request.body.national_id,
+        image: request.body.image
+    });
+    object
+        .save()
+        .then(function (data) {
+        response.status(201).json({ data: "added" });
+    })["catch"](function (error) { return next(error); });
+};
+// Update Employee By ID
+module.exports.updateEmployee = function (request, response, next) {
+    // console.log(request.body.id);
+    Employee.findById(request.body.id)
+        .then(function (data) {
+        for (var key in request.body) {
+            data[key] = request.body[key];
+        }
+        data.save();
+        response.status(200).json({ data: "updated" });
+    })["catch"](function (error) {
+        next(error);
+    });
+};
+// Delete Employee By ID
+module.exports.deleteEmployee = function (request, response, next) {
+    Employee.deleteOne({ _id: request.params.id })
+        .then(function (data) {
+        if (!data) {
+            next(new Error(" Employee not found"));
+        }
+        else {
+            response.status(200).json({ data: "deleted" });
+        }
+    })["catch"](function (error) {
+        next(error);
+    });
+};

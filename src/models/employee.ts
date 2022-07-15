@@ -21,9 +21,9 @@ const employeeSchema =
       type: String,
     },
     typeofEmployee: {
-      type: String,
+      enum: [],
       required: true,
     },
   });
 
-  const Employee = model<Iemployee>("Employee",employeeSchema)
+  module.exports = model<Iemployee>("Employee",employeeSchema)
