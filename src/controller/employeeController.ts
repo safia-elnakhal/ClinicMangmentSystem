@@ -29,13 +29,10 @@ export const getEmployeeByID = (request: any, response:  any, next:any) => {
 // Create Employee
 export const createEmployee = (request: any, response:  any, next:any) => {
     let object = new Employee({
-        fullName: request.body.fullName,
+        name: request.body.name,
         age: request.body.age,
         email: request.body.email,
         password: request.body.password,
-        phone: request.body.phone,
-        national_id: request.body.national_id,
-        image: request.body.image,
     });
     object
         .save()

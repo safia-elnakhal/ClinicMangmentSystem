@@ -20,10 +20,10 @@ const employeeSchema =
     password: {
       type: String,
     },
-    typeofEmployee: {
-      enum: [],
-      required: true,
-    },
+    // typeofEmployee: {
+    //   enum: [],
+    //   required: true,
+    // },
   });
 
   module.exports = model<Iemployee>("Employee",employeeSchema)

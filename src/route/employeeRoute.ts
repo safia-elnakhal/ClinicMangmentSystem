@@ -1,8 +1,8 @@
-import * as express from "express"
+import { Router } from "express"
 import * as Controller from "../controller/employeeController";
-const router = express.Router();
+const routes = Router();
 
-router
+routes
   .route("/employee")
   .get(Controller.getAllEmployees)
   .post(
@@ -12,7 +12,7 @@ router
     Controller.updateEmployee
   );
 
-router
+  routes
   .route("/employee/:id")
   .get(
     Controller.getEmployeeByID
@@ -21,4 +21,4 @@ router
     Controller.deleteEmployee
   );
 
-module.exports = router;
+export default routes;

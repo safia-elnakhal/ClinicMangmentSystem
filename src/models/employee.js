@@ -12,10 +12,6 @@ var employeeSchema = new mongoose_1.Schema({
     },
     password: {
         type: String
-    },
-    typeofEmployee: {
-        "enum": [],
-        required: true
     }
 });
 module.exports = (0, mongoose_1.model)("Employee", employeeSchema);
