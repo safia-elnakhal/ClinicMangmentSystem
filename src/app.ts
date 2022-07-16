@@ -3,7 +3,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 const server = express();
 
-import clinicServicesRoute from "./routes/clinic";
+import clinicServicesRoute from "./routes/clinicRoute";
 
 mongoose
   .connect("mongodb://localhost:27017/CMSDB")
