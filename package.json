@@ -7,6 +7,7 @@
     "start": "nodemon ./src/app.js",
     "start:db": "mongod --dbpath \"./db\"",
     "test": "echo \"Error: no test specified\" && exit 1"
+
   },
   "repository": {
     "type": "git",
