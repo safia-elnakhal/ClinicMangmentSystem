@@ -4,7 +4,7 @@ require("../models/doctorModel");
 let  Doctor = mongoose.model("doctor");
 
 // Get All Doctors
-export const getAllEmployees = (request: any, response:  any, next:any) => {
+export const getAllDoctor = (request: any, response:  any, next:any) => {
     Doctor.find({})
         .then((data: any) => {
             response.status(200).json(data);
@@ -15,7 +15,7 @@ export const getAllEmployees = (request: any, response:  any, next:any) => {
 };
 
 // Get Doctor By Id
-export const getEmployeeByID = (request: any, response:  any, next:any) => {
+export const getDoctorByID = (request: any, response:  any, next:any) => {
     Doctor.findOne({ _id: request.params.id })
         .then((data : any) => {
             if (data == null) next(new Error(" Doctor not found"));
