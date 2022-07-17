@@ -16,7 +16,6 @@ interface Reports {
 
 
 interface IPatient {
-    _id: Types.ObjectId;
     email: string;
     name: string;
     password: string;
@@ -31,9 +30,9 @@ interface IPatient {
 
 const PatientSchema = new Schema<IPatient>({
 
-    _id: {
-        type: Schema.Types.ObjectId,
-    },
+    // _id: {
+    //     type: Schema.Types.ObjectId,
+    // },
     name: {
         type: String,
         required: true
@@ -81,6 +80,6 @@ const PatientSchema = new Schema<IPatient>({
 
 
 
+const Patient = model<IPatient>('Patient', PatientSchema);
 
-
-export default model<IPatient>('patient', PatientSchema);
+export { Patient, IPatient };
