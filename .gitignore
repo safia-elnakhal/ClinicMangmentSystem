@@ -3,5 +3,6 @@ node_modules
 package-lock.json
 
 # project-related files
+build
 db
 .env
