@@ -4,7 +4,7 @@ interface Iemployee {
   name: string;
   email: string;
   password: string;
-  typeofEmployee: String;
+  typeofEmployee: Enumerator;
 }
 
 const employeeSchema =
@@ -20,10 +20,10 @@ const employeeSchema =
     password: {
       type: String,
     },
-    // typeofEmployee: {
-    //   enum: [],
-    //   required: true,
-    // },
+    typeofEmployee: {
+      enum: ["reception","nursing","cleaning"],
+      required: true,
+    },
   });
 
   module.exports = model<Iemployee>("Employee",employeeSchema)
