@@ -1,13 +1,16 @@
 {
-	"name": "clinicmangmentsystem",
+	"name": "clinic-management-system",
 	"version": "1.0.0",
 	"description": "",
 	"main": "./src/app.js",
 	"scripts": {
-		"start": "nodemon ./src/app.js",
+		"start": "npm run build && node ./build/app.js",
+		"start:dev": "nodemon ./src/app.ts",
 		"start:db": "mongod --dbpath \"./db\"",
 		"build": "npx tsc",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"format": "prettier --write  src/**/*.ts",
+		"lint:fix": "eslint src/**/*.ts --fix"
 	},
 	"repository": {
 		"type": "git",

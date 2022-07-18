@@ -2,9 +2,9 @@
 import express = require("express");
 import { Request, Response, NextFunction } from "express";
 import morgan = require("morgan");
-import * as mongoose from "mongoose";
+import mongoose from "mongoose";
 import cors = require("cors");
-import routes from "../src/route/employeeRoute";
+import routes from "./routes/employeeRoute";
 
 require("dotenv").config();
 
