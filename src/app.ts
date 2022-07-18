@@ -1,11 +1,18 @@
 // import * as express from "express";
-import express = require('express')
-import { Request, Response, NextFunction } from 'express'
-import morgan = require('morgan')
+// import express = require('express')
+// import { Request, Response, NextFunction } from 'express'
+import express, { Application, Request, Response, NextFunction } from 'express'
+
+// import morgan = require('morgan')
+import morgan from 'morgan'
+// import mongoose from "mongoose";
 import mongoose from 'mongoose'
-import cors = require('cors')
-import routes from './routes/employeeRoute'
+import cors from 'cors'
+// import cors = require('cors')
+import employeeRoute from './routes/employeeRoute'
+import doctorRoutes from './routes/doctorRoutes'
 import patientRoutes from './routes/patientRoute'
+import clinicServicesRoute from './routes/clinicRoute'
 
 require('dotenv').config()
 
@@ -25,10 +32,13 @@ mongoose
   })
 
 app.use(cors())
-app.use(morgan(':method :url :status - :response-time ms'))
+app.use(morgan(':method :url'))
 app.use(express.json())
-app.use(routes)
+
+app.use(employeeRoute)
+app.use(doctorRoutes)
 app.use(patientRoutes)
+app.use(clinicServicesRoute)
 
 // not-found middleware
 app.use((request: Request, response: Response, next: NextFunction) => {
@@ -39,8 +49,12 @@ app.use((request: Request, response: Response, next: NextFunction) => {
 // handling errors middleware
 app.use(
   (error: any, request: Request, response: Response, next: NextFunction) => {
+    let status: number = error.status || 500
     response
-      .status(error.status || 500)
-      .json({ message: 'Internal Error', details: error.message })
+      .status(status)
+      .json({ Message: 'Internal Error', details: error.message })
+    // response
+    //   .status(error.status || 500)
+    //   .json({ message: 'Internal Error', details: error.message })
   }
 )

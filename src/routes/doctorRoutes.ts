@@ -1,25 +1,16 @@
-
-import { Router } from "express"
-import * as Controller from "../controllers/doctorcontroller";
-const routes = Router();
+import { Router } from 'express'
+import * as Controller from '../controllers/doctorController'
+const routes = Router()
 
 routes
-  .route("/doctor")
+  .route('/doctor')
   .get(Controller.getAllDoctor)
-  .post(
-      Controller.createDoctor
-  )
-  .put(
-    Controller.updateDoctor
-  );
+  .post(Controller.createDoctor)
+  .put(Controller.updateDoctor)
 
-  routes
-  .route("/doctor/:id")
-  .get(
-    Controller.getDoctorByID
-  )
-  .delete(
-    Controller.deleteDoctor
-  );
+routes
+  .route('/doctor/:id')
+  .get(Controller.getDoctorByID)
+  .delete(Controller.deleteDoctor)
 
-export default routes;
+export default routes

@@ -1,7 +1,6 @@
+import mongoose, { Schema,model } from "mongoose";
 
-import { Schema, model } from "mongoose";
-
- interface IAddress {
+export interface IAddress {
   city: string;
   streetName: string;
   buildingNumber: number;
@@ -22,4 +21,4 @@ const addressSchema: Schema = new Schema<IAddress>({
   },
 });
 
-module.exports = model<IAddress>("address", addressSchema);
+export default mongoose.model<IAddress>("address", addressSchema);
