@@ -44,7 +44,7 @@ const updateClinicServices = (
         }
     )
         .then((data) => {
-            if (data.matchedCount == 0) next(new Error('Clinic Not Found'))
+            if (data.matchedCount === 0) next(new Error('Clinic Not Found'))
             else {
                 response.status(200).json('Clinic Services Has Been Added')
             }
@@ -67,7 +67,7 @@ const deleteClinicServices = (
         }
     )
         .then((data) => {
-            if (data.matchedCount == 0) next(new Error('Clinic Not Found'))
+            if (data.matchedCount === 0) next(new Error('Clinic Not Found'))
             else {
                 response.status(200).json('Clinic Services Has Been deleted')
             }

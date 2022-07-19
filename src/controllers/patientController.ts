@@ -1,4 +1,5 @@
-import { Schema, Types, model } from 'mongoose'
+/* eslint-disable consistent-return */
+// import { Schema, Types, model } from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
 // require("../models/patientModel");
 // let Patient = mongoose.model("Patient");

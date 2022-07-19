@@ -1,12 +1,12 @@
-import { Schema, model, Types } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
 interface IDoctor {
     name: string
     age: number
-    address: Types.ObjectId
+    // address: Types.ObjectId
     email: string
     password: string
-    speciality: string
+    specialty: string
 }
 
 const doctorSchema = new Schema<IDoctor>({
@@ -17,10 +17,10 @@ const doctorSchema = new Schema<IDoctor>({
     age: {
         type: Number,
     },
-    address: {
-        type: Schema.Types.ObjectId,
-        ref: 'address',
-    },
+    // address: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'address',
+    // },
     email: {
         type: String,
         required: true,

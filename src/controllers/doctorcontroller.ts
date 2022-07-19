@@ -36,7 +36,7 @@ export const createDoctor = (request: any, response: any, next: any) => {
     })
     object
         .save()
-        .then((data: any) => {
+        .then(() => {
             response.status(201).json({ data: 'added' })
         })
         .catch((error: any) => next(error))
@@ -47,9 +47,9 @@ export const updateDoctor = (request: any, response: any, next: any) => {
     // console.log(request.body.id);
     Doctor.findById(request.body.id)
         .then((data: { [x: string]: any; save: () => void }) => {
-            for (const key in request.body) {
-                data[key] = request.body[key]
-            }
+            // for (const key in request.body) {
+            //     data[key] = request.body[key]
+            // }
             data.save()
             response.status(200).json({ data: 'updated' })
         })
