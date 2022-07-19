@@ -24,7 +24,7 @@ mongoose
     .connect(dbURL)
     .then(() => {
         app.listen(port, () => {
-            console.log('App listens on port', port)
+            console.log(`App listens on http://localhost:${port}`)
         })
     })
     .catch((error: any) => {
