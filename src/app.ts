@@ -12,6 +12,7 @@ import cors from 'cors'
 import employeeRoute from './routes/employeeRoute'
 import doctorRoutes from './routes/doctorRoutes'
 import patientRoutes from './routes/patientRoute'
+import invoiceRoutes from './routes/invoiceRoute'
 import clinicServicesRoute from './routes/clinicRoute'
 
 require('dotenv').config()
@@ -38,6 +39,7 @@ app.use(express.json())
 app.use(employeeRoute)
 app.use(doctorRoutes)
 app.use(patientRoutes)
+app.use(invoiceRoutes)
 app.use(clinicServicesRoute)
 
 // not-found middleware

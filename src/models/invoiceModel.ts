@@ -3,7 +3,7 @@ import { Schema, Types, model, Document } from 'mongoose'
 interface IInvoice extends Document {
     doctorId: Types.ObjectId
     patientId: Types.ObjectId
-    Charge: number
+    charge: number
 }
 
 const InvoiceSchema = new Schema<IInvoice>({
@@ -17,12 +17,12 @@ const InvoiceSchema = new Schema<IInvoice>({
         ref: 'patients',
         required: true,
     },
-    Charge: {
+    charge: {
         type: Schema.Types.Number,
         required: true,
     },
 })
 
-const Invoice = model<IInvoice>('Patient', InvoiceSchema)
+const Invoice = model<IInvoice>('invoice', InvoiceSchema)
 
 export { Invoice, IInvoice }
