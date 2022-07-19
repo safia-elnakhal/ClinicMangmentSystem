@@ -21,15 +21,15 @@ const port = process.env.PORT || 8080
 
 const cmsDB_URL = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
 mongoose
-  .connect(cmsDB_URL)
-  .then(() => {
-    app.listen(port, () => {
-      console.log('App listens on port', port)
+    .connect(cmsDB_URL)
+    .then(() => {
+        app.listen(port, () => {
+            console.log('App listens on port', port)
+        })
     })
-  })
-  .catch((error: any) => {
-    console.log('DB Connection Error', error)
-  })
+    .catch((error: any) => {
+        console.log('DB Connection Error', error)
+    })
 
 app.use(cors())
 app.use(morgan(':method :url'))
@@ -42,19 +42,19 @@ app.use(clinicServicesRoute)
 
 // not-found middleware
 app.use((request: Request, response: Response, next: NextFunction) => {
-  // throw new Error("very big error"); //throwing an error causes the error handling middleware to work
-  response.status(404).json({ message: 'Endpoint not found.' })
+    // throw new Error("very big error"); //throwing an error causes the error handling middleware to work
+    response.status(404).json({ message: 'Endpoint not found.' })
 })
 
 // handling errors middleware
 app.use(
-  (error: any, request: Request, response: Response, next: NextFunction) => {
-    let status: number = error.status || 500
-    response
-      .status(status)
-      .json({ Message: 'Internal Error', details: error.message })
-    // response
-    //   .status(error.status || 500)
-    //   .json({ message: 'Internal Error', details: error.message })
-  }
+    (error: any, request: Request, response: Response, next: NextFunction) => {
+        let status: number = error.status || 500
+        response
+            .status(status)
+            .json({ Message: 'Internal Error', details: error.message })
+        // response
+        //   .status(error.status || 500)
+        //   .json({ message: 'Internal Error', details: error.message })
+    }
 )

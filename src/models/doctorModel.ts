@@ -1,34 +1,33 @@
-import { Schema, model, Types } from "mongoose";
+import { Schema, model, Types } from 'mongoose'
 
 interface IDoctor {
-    name: string;
-    age: number;
-    address:Types.ObjectId;
-    email: string;
-    password: string;
-    speciality: string;
+    name: string
+    age: number
+    address: Types.ObjectId
+    email: string
+    password: string
+    speciality: string
 }
 
-const doctorSchema =new Schema <IDoctor>({
+const doctorSchema = new Schema<IDoctor>({
     name: {
-      type: String,
-      required: true,
-      },
-      age:{
-          type:Number,
-          
-      },
-address: {
-    type:Schema.Types.ObjectId ,ref:"address"
-},
+        type: String,
+        required: true,
+    },
+    age: {
+        type: Number,
+    },
+    address: {
+        type: Schema.Types.ObjectId,
+        ref: 'address',
+    },
     email: {
-      type: String,
-      required: true,
+        type: String,
+        required: true,
     },
     password: {
-      type: String,
+        type: String,
     },
-   
-  });
+})
 
-  module.exports = model<IDoctor>("doctors",doctorSchema)
+module.exports = model<IDoctor>('doctors', doctorSchema)

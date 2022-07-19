@@ -9,16 +9,16 @@ import { Patient, IPatient } from '../models/patientModel'
 
 // Get All patient
 export const getAllPatients = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-  try {
-    const data: IPatient[] = await Patient.find({})
-    res.status(200).send(data)
-  } catch (error) {
-    next(error)
-  }
+    try {
+        const data: IPatient[] = await Patient.find({})
+        res.status(200).send(data)
+    } catch (error) {
+        next(error)
+    }
 }
 
 // // Get All patient
@@ -34,21 +34,23 @@ export const getAllPatients = async (
 
 // Get patient ByID
 export const getPatientsById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-  try {
-    const data: IPatient | null = await Patient.findOne({ _id: req.params.id })
+    try {
+        const data: IPatient | null = await Patient.findOne({
+            _id: req.params.id,
+        })
 
-    if (data) {
-      return res.status(200).send(data)
-    } else {
-      next(new Error(' patient not found'))
+        if (data) {
+            return res.status(200).send(data)
+        } else {
+            next(new Error(' patient not found'))
+        }
+    } catch (error) {
+        next(error)
     }
-  } catch (error) {
-    next(error)
-  }
 }
 
 // // Get Patient By ID
@@ -69,19 +71,19 @@ export const getPatientsById = async (
 
 // Create patient
 export const createPatient = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-  try {
-    const data: IPatient = req.body
+    try {
+        const data: IPatient = req.body
 
-    const object = await Patient.create(data)
+        const object = await Patient.create(data)
 
-    res.status(201).json(object)
-  } catch (error) {
-    next(error)
-  }
+        res.status(201).json(object)
+    } catch (error) {
+        next(error)
+    }
 }
 
 // Create patient
@@ -108,24 +110,24 @@ export const createPatient = async (
 
 // UpdatePatient
 export const updatePatient = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-  try {
-    const data: IPatient | null = await Patient.findOneAndUpdate(
-      { _id: mongoose.Types.ObjectId(req.body.id) },
-      { $set: req.body }
-    )
+    try {
+        const data: IPatient | null = await Patient.findOneAndUpdate(
+            { _id: mongoose.Types.ObjectId(req.body.id) },
+            { $set: req.body }
+        )
 
-    if (!data) {
-      throw new Error('patient not found')
+        if (!data) {
+            throw new Error('patient not found')
+        }
+
+        res.status(200).json({ message: 'modified patient' })
+    } catch (error) {
+        next(error)
     }
-
-    res.status(200).json({ message: 'modified patient' })
-  } catch (error) {
-    next(error)
-  }
 }
 
 // Update patient By ID
@@ -147,19 +149,19 @@ export const updatePatient = async (
 
 // delete Patient
 export const deletePatientById = async (
-  request: Request,
-  response: Response,
-  next: NextFunction
+    request: Request,
+    response: Response,
+    next: NextFunction
 ) => {
-  try {
-    const data = await Patient.deleteOne({
-      _id: mongoose.Types.ObjectId(request.body.id),
-    })
-    if (data.deletedCount < 1) throw new Error('patient  not found')
-    response.status(200).json({ message: 'patient deleted' })
-  } catch (error) {
-    next(error)
-  }
+    try {
+        const data = await Patient.deleteOne({
+            _id: mongoose.Types.ObjectId(request.body.id),
+        })
+        if (data.deletedCount < 1) throw new Error('patient  not found')
+        response.status(200).json({ message: 'patient deleted' })
+    } catch (error) {
+        next(error)
+    }
 }
 
 // Delete Admin By ID
