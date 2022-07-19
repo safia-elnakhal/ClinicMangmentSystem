@@ -22,7 +22,7 @@ const employeeSchema =
     },
     typeofEmployee: {
       enum: ["reception","nursing","cleaning"],
-      required: true,
+      // required: true,
     },
   });
 
