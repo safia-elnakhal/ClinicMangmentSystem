@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { validationResult, ValidationError } from 'express-validator';
-import { IPatient } from "../models/patientModel"
 
 export default (req: Request, res: Response, next: NextFunction) => {
     const errorFormatter = ({ location, msg, param, value, nestedErrors }: ValidationError) => {
