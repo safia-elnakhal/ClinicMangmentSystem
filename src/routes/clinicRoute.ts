@@ -1,5 +1,6 @@
 import express from 'express'
 import clinicController from '../controllers/clinicController'
+
 const router = express.Router()
 
 router

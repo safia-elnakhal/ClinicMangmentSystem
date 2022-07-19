@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 require('../models/doctorModel')
 
-let Doctor = mongoose.model('doctors')
+const Doctor = mongoose.model('doctors')
 
 // Get All Doctors
 export const getAllDoctor = (request: any, response: any, next: any) => {
@@ -28,7 +28,7 @@ export const getDoctorByID = (request: any, response: any, next: any) => {
 
 // Create Doctors
 export const createDoctor = (request: any, response: any, next: any) => {
-    let object = new Doctor({
+    const object = new Doctor({
         name: request.body.name,
         age: request.body.age,
         email: request.body.email,

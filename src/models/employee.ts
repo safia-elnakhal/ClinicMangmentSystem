@@ -25,4 +25,4 @@ const employeeSchema = new Schema<Iemployee>({
     },
 })
 
-module.exports = model<Iemployee>('Employee', employeeSchema)
+export default model<Iemployee>('Employee', employeeSchema)

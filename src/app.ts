@@ -1,7 +1,7 @@
 // import * as express from "express";
 // import express = require('express')
 // import { Request, Response, NextFunction } from 'express'
-import express, { Application, Request, Response, NextFunction } from 'express'
+import express, { Application, Request, Response } from 'express'
 
 // import morgan = require('morgan')
 import morgan from 'morgan'
@@ -16,12 +16,12 @@ import clinicServicesRoute from './routes/clinicRoute'
 
 require('dotenv').config()
 
-const app = express()
+const app: Application = express()
 const port = process.env.PORT || 8080
 
-const cmsDB_URL = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
+const dbURL = `mongodb://${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
 mongoose
-    .connect(cmsDB_URL)
+    .connect(dbURL)
     .then(() => {
         app.listen(port, () => {
             console.log('App listens on port', port)
@@ -41,20 +41,18 @@ app.use(patientRoutes)
 app.use(clinicServicesRoute)
 
 // not-found middleware
-app.use((request: Request, response: Response, next: NextFunction) => {
+app.use((request: Request, response: Response) => {
     // throw new Error("very big error"); //throwing an error causes the error handling middleware to work
     response.status(404).json({ message: 'Endpoint not found.' })
 })
 
 // handling errors middleware
-app.use(
-    (error: any, request: Request, response: Response, next: NextFunction) => {
-        let status: number = error.status || 500
-        response
-            .status(status)
-            .json({ Message: 'Internal Error', details: error.message })
-        // response
-        //   .status(error.status || 500)
-        //   .json({ message: 'Internal Error', details: error.message })
-    }
-)
+app.use((error: any, request: Request, response: Response) => {
+    const status: number = error.status || 500
+    response
+        .status(status)
+        .json({ Message: 'Internal Error', details: error.message })
+    // response
+    //   .status(error.status || 500)
+    //   .json({ message: 'Internal Error', details: error.message })
+})

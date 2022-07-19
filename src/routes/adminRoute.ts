@@ -1,17 +1,17 @@
 import { Router } from 'express'
-import * as adminController from "../controllers/adminController";
+import * as adminController from '../controllers/adminController'
 
-const router = Router();
-
-router
-  .route("/admin")
-  .get(adminController.getAllAdmins)
-  .post(adminController.createAdmin)
-  .put(adminController.updateAdmin);
+const router = Router()
 
 router
-  .route("/admin/:id")
-  .get(adminController.getAdminByID)
-  .delete(adminController.deleteAdmin);
+    .route('/admin')
+    .get(adminController.getAllAdmins)
+    .post(adminController.createAdmin)
+    .put(adminController.updateAdmin)
 
-export = router;
+router
+    .route('/admin/:id')
+    .get(adminController.getAdminByID)
+    .delete(adminController.deleteAdmin)
+
+export = router

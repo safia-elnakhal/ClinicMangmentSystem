@@ -1,9 +1,10 @@
-const mongoose = require('mongoose')
-require('../models/employee')
 import { ObjectID } from 'bson'
 import { Request, Response, NextFunction } from 'express'
 
-let Employee = mongoose.model('Employee')
+const mongoose = require('mongoose')
+require('../models/employee')
+
+const Employee = mongoose.model('Employee')
 
 // Get All Employees
 export const getAllEmployees = (
@@ -42,7 +43,7 @@ export const createEmployee = (
     response: Response,
     next: NextFunction
 ) => {
-    let object = new Employee({
+    const object = new Employee({
         name: request.body.name,
         age: request.body.age,
         email: request.body.email,

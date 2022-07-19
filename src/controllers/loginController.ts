@@ -9,7 +9,6 @@
 // import bcrypt from "bcrypt";
 // import { Request, Response, NextFunction } from 'express'
 
-
 // export const loginPatient = (request:Request, response:Response, next:NextFunction) => {
 //   Patient.findOne({
 //     email: request.body.email,
@@ -71,7 +70,6 @@
 //     })
 //     .catch((error:Error) => next(error));
 // };
-
 
 // export const loginEmployee = (request:Request, response:Response, next:NextFunction) => {
 //   Employee.findOne({

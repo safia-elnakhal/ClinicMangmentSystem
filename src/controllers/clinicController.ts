@@ -20,7 +20,7 @@ const createClinicService = (
     response: Response,
     next: NextFunction
 ) => {
-    let clinicServiceObject = new ClinicService(request.body)
+    const clinicServiceObject = new ClinicService(request.body)
     clinicServiceObject
         .save()
         .then(() => {
@@ -29,7 +29,7 @@ const createClinicService = (
         .catch((error) => next(error))
 }
 
-//Update Clinic Services (adding new services)
+// Update Clinic Services (adding new services)
 const updateClinicServices = (
     request: Request,
     response: Response,
@@ -52,7 +52,7 @@ const updateClinicServices = (
         .catch((error) => next(error))
 }
 
-//Update Clinic Services (adding new services)
+// Update Clinic Services (adding new services)
 const deleteClinicServices = (
     request: Request,
     response: Response,

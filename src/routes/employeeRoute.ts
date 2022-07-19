@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import * as Controller from '../controllers/employeeController'
+
 const routes = Router()
 
 routes

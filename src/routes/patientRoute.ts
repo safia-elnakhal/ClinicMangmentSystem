@@ -1,6 +1,8 @@
-const { body, param, query } = require('express-validator')
 import { Router } from 'express'
 import * as patientController from '../controllers/patientController'
+
+const { body, param, query } = require('express-validator')
+
 const patientRoute = Router()
 
 patientRoute

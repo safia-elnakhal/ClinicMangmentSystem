@@ -1,53 +1,60 @@
 {
-  "name": "clinic-management-system",
-  "version": "1.0.0",
-  "description": "",
-  "main": "./src/app.js",
-  "scripts": {
-    "start": "nodemon ./src/app.ts",
-    "start:prod": "npm run build && node ./build/app.js",
-    "start:db": "mongod --dbpath \"./db\"",
-    "build": "npx tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write  src/**/*.ts",
-    "lint:fix": "eslint src/**/*.ts --fix"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/safia-elnakhal/ClinicMangmentSystem.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/safia-elnakhal/ClinicMangmentSystem/issues"
-  },
-  "homepage": "https://github.com/safia-elnakhal/ClinicMangmentSystem#readme",
-  "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
-    "@types/bcrypt": "^5.0.0",
-    "@types/cors": "^2.8.12",
-    "@types/dotenv": "^8.2.0",
-    "@types/express": "^4.17.13",
-    "@types/jsonwebtoken": "^8.5.8",
-    "@types/morgan": "^1.9.3",
-    "@types/node": "^18.0.4",
-    "express": "^4.18.1",
-    "prettier": "^2.7.1",
-    "ts-node": "^10.9.1",
-    "ts-node-dev": "^2.0.0",
-    "tsc-watch": "^5.0.3",
-    "typescript": "^4.7.4"
-  },
-  "dependencies": {
-    "@types/mongoose": "^5.11.97",
-    "bcrypt": "^5.0.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.1",
-    "express-validator": "^6.14.2",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.4.4",
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.19"
-  }
+    "name": "clinic-management-system",
+    "version": "1.0.0",
+    "description": "",
+    "main": "./src/app.js",
+    "scripts": {
+        "start": "nodemon  ./src/app.ts",
+        "start:prod": "npm run build && node ./build/app.js",
+        "start:db": "mongod --dbpath \"./db\"",
+        "build": "npx tsc",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "format": "prettier --write  src/**/*.ts",
+        "lint:fix": "eslint src/**/*.ts --fix"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/safia-elnakhal/ClinicMangmentSystem.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/safia-elnakhal/ClinicMangmentSystem/issues"
+    },
+    "homepage": "https://github.com/safia-elnakhal/ClinicMangmentSystem#readme",
+    "devDependencies": {
+        "@tsconfig/node16": "^1.0.3",
+        "@types/bcrypt": "^5.0.0",
+        "@types/cors": "^2.8.12",
+        "@types/dotenv": "^8.2.0",
+        "@types/express": "^4.17.13",
+        "@types/jsonwebtoken": "^8.5.8",
+        "@types/morgan": "^1.9.3",
+        "@types/node": "^18.0.4",
+        "@typescript-eslint/eslint-plugin": "^5.30.7",
+        "@typescript-eslint/parser": "^5.30.7",
+        "eslint": "^8.20.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "prettier": "^2.7.1",
+        "ts-node": "^10.9.1",
+        "ts-node-dev": "^2.0.0",
+        "tsc-watch": "^5.0.3",
+        "typescript": "^4.7.4"
+    },
+    "dependencies": {
+        "@types/mongoose": "^5.11.97",
+        "bcrypt": "^5.0.1",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "express-validator": "^6.14.2",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.4.4",
+        "morgan": "^1.10.0",
+        "nodemon": "^2.0.19"
+    }
 }

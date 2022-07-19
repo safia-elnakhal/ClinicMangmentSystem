@@ -30,4 +30,4 @@ const doctorSchema = new Schema<IDoctor>({
     },
 })
 
-module.exports = model<IDoctor>('doctors', doctorSchema)
+export default model<IDoctor>('doctors', doctorSchema)

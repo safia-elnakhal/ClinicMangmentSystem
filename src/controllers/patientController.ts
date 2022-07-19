@@ -1,11 +1,11 @@
 import { Schema, Types, model } from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
-
-const mongoose = require('mongoose')
 // require("../models/patientModel");
 // let Patient = mongoose.model("Patient");
 
 import { Patient, IPatient } from '../models/patientModel'
+
+const mongoose = require('mongoose')
 
 // Get All patient
 export const getAllPatients = async (
@@ -45,9 +45,8 @@ export const getPatientsById = async (
 
         if (data) {
             return res.status(200).send(data)
-        } else {
-            next(new Error(' patient not found'))
         }
+        next(new Error(' patient not found'))
     } catch (error) {
         next(error)
     }
