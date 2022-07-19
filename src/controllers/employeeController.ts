@@ -12,10 +12,10 @@ export const getAllEmployees = (
     next: NextFunction
 ) => {
     Employee.find({})
-        .then((data: any) => {
+        .then((data: String) => {
             response.status(200).json(data)
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             next(error)
         })
 }
@@ -50,10 +50,10 @@ export const createEmployee = (
     })
     object
         .save()
-        .then((data: any) => {
+        .then((data: String) => {
             response.status(201).json({ data: 'added' })
         })
-        .catch((error: any) => next(error))
+        .catch((error: Error) => next(error))
 }
 
 // Update Employee By ID
@@ -71,7 +71,7 @@ export const updateEmployee = (
             data.save()
             response.status(200).json({ data: 'updated' })
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             next(error)
         })
 }
@@ -90,7 +90,7 @@ export const deleteEmployee = (
                 response.status(200).json({ data: 'deleted' })
             }
         })
-        .catch((error: any) => {
+        .catch((error: Error) => {
             next(error)
         })
 }
