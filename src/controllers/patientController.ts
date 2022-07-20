@@ -7,18 +7,51 @@ import { Patient, IPatient } from '../models/patientModel'
 const mongoose = require('mongoose')
 
 // Get All patient
+
 export const getAllPatients = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        const data: IPatient[] = await Patient.find({}).populate({ path: 'reports.doctorId' }).populate({ path: 'reports.appointmentId' }).populate({ path: 'reports.invoiceId' })
+        let sortType = req.query.sorting
+        let filterGender = req.query.gender
+        let filtermaxAge = req.query.maxAge
+        let filterminAge = req.query.minAge
+
+        let query: {} = {}
+        let sort: {} = {}
+        if (sortType === 'nameAZ') {
+            sort = { name: 1 }
+        } else if (sortType === 'nameZA') {
+            sort = { name: -1 }
+        } else if (sortType === 'ageAsc') {
+            sort = { age: 1 }
+        } else if (sortType === 'ageDsc') {
+            sort = { age: -1 }
+        } else if (filterGender) {
+            query = { gender: filterGender }
+        } else if (filtermaxAge) {
+            query = { age: { $lte: filtermaxAge } }
+        } else if (filterminAge) {
+            query = { age: { $gte: filterminAge } }
+        }
+
+
+        console.log(req.query)
+        const data: IPatient[] = await Patient.find(query)
+            .populate({ path: 'reports.doctorId' })
+            .populate({ path: 'reports.appointmentId' })
+            .populate({ path: 'reports.invoiceId' })
+            .sort(sort)
         res.status(200).send(data)
     } catch (error) {
         next(error)
     }
+
 }
+
+
 
 // // Get All patient
 // export const getAllPatients = (request: Request, response: Response, next: NextFunction) => {
