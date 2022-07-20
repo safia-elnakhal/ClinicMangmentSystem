@@ -10,6 +10,9 @@ interface IDoctor {
 }
 
 const doctorSchema = new Schema<IDoctor>({
+    // _id: {
+    //     type: Schema.Types.ObjectId,
+    // },
     name: {
         type: String,
         required: true,
@@ -28,6 +31,11 @@ const doctorSchema = new Schema<IDoctor>({
     password: {
         type: String,
     },
+    specialty: {
+        type: String,
+    },
 })
 
-export default model<IDoctor>('doctors', doctorSchema)
+const Doctor = model<IDoctor>('Doctor', doctorSchema)
+
+export { Doctor, IDoctor }

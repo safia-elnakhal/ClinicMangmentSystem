@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as Controller from '../controllers/doctorcontroller'
+import * as Controller from '../controllers/doctorController'
 
 const routes = Router()
 
@@ -7,7 +7,7 @@ routes
     .route('/doctor')
     .get(Controller.getAllDoctor)
     .post(Controller.createDoctor)
-    .put(Controller.updateDoctor)
+// .put(Controller.updateDoctor)
 
 routes
     .route('/doctor/:id')

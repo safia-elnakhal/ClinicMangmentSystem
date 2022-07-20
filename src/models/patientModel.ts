@@ -1,7 +1,10 @@
 import { Schema, Types, model } from 'mongoose'
 
+// eslint-disable-next-line no-unused-vars, no-shadow
 enum Gender {
+    // eslint-disable-next-line no-unused-vars
     male = 'male',
+    // eslint-disable-next-line no-unused-vars
     female = 'female',
 }
 

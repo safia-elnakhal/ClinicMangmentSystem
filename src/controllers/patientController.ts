@@ -1,5 +1,3 @@
-/* eslint-disable consistent-return */
-// import { Schema, Types, model } from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
 // require("../models/patientModel");
 // let Patient = mongoose.model("Patient");
@@ -38,6 +36,7 @@ export const getPatientsById = async (
     req: Request,
     res: Response,
     next: NextFunction
+    // eslint-disable-next-line consistent-return
 ) => {
     try {
         const data: IPatient | null = await Patient.findOne({
