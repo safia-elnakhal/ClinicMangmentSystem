@@ -2,7 +2,7 @@
 import * as nodemailer from 'nodemailer'
 import * as SMTPTransport from 'nodemailer/lib/smtp-transport'
 
-// require('dotenv').config()
+require('dotenv').config()
 
 export default class EmailClient {
     private account!: { name: string; email: string }
@@ -12,7 +12,7 @@ export default class EmailClient {
     private message!: { subject: string; body: string }
 
     constructor() {
-        console.log(process.env)
+        // console.log(process.env)
 
         const orgName = 'ITI Eyes Clinic 👁👃👁'
         const orgEmail = process.env.ORG_EMAIL || ''
