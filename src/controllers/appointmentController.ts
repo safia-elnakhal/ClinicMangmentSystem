@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 
 import convertString from '../utilities/convertString'
 import { Appointment, IAppointment } from '../models/appointmentModel'
+import { Doctor, IDoctor } from '../models/doctorModel'
 
 // Get all Appointments
 export const getAllAppointments = async (
@@ -10,7 +11,9 @@ export const getAllAppointments = async (
     next: NextFunction
 ) => {
     try {
-        const data: IAppointment[] = await Appointment.find({}).populate({ path: "patientId" }).populate({ path: "doctorId" })
+        const data: IAppointment[] = await Appointment.find({})
+            .populate({ path: 'patientId' })
+            .populate({ path: 'doctorId' })
         response.status(200).send(data)
     } catch (error) {
         next(error)
@@ -27,7 +30,9 @@ export const getAppointmentById = async (
     try {
         const data: IAppointment | null = await Appointment.findOne({
             _id: request.params.id,
-        }).populate({ path: "patientId" }).populate({ path: "doctorId" })
+        })
+            .populate({ path: 'patientId' })
+            .populate({ path: 'doctorId' })
 
         if (data) {
             return response.status(200).send(data)
@@ -46,7 +51,6 @@ export const createAppointment = async (
 ) => {
     try {
         const data: IAppointment = request.body
-
         const object = await Appointment.create(data)
 
         response.status(201).json(object)
@@ -96,3 +100,19 @@ export const deleteAppointmentById = async (
         next(error)
     }
 }
+
+// export const createAppointment = async (
+//     request: Request,
+//     response: Response,
+//     next: NextFunction
+// ) => {
+//     try {
+//         const data: IAppointment = request.body
+//         console.log(data)
+//         const object = await Appointment.create(data)
+
+//         response.status(201).json(object)
+//     } catch (error) {
+//         next(error)
+//     }
+// }
