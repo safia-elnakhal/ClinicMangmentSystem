@@ -10,43 +10,19 @@ appointmentRoute
     .get(appointmentController.getAllAppointments)
     .post(
         [
-            param('doctorId')
+            body('doctorId')
                 .exists()
                 .withMessage('appointments id is required')
                 .isMongoId()
                 .withMessage('appointments id should be objectId'),
-            param('patientId')
-                .exists()
-                .withMessage('appointments id is required')
-                .isMongoId()
-                .withMessage('appointments id should be objectId'),
-            body('reasonOfVisit')
-                .optional()
-                .isAlphanumeric('en-US', { ignore: ' ' })
-                .withMessage('appointments reasonOfVisit must be an alpha'),
-            body('date')
-                .optional()
-                .isDate()
-                .withMessage('appointments expirationDate must be a date'),
-        ],
-        validationMW,
-        appointmentController.getAppointmentById
-    )
-    .put(
-        [
-            param('doctorId')
-                .exists()
-                .withMessage('appointments id is required')
-                .isMongoId()
-                .withMessage('appointments id should be objectId'),
-            param('patientId')
+            body('patientId')
                 .exists()
                 .withMessage('appointments id is required')
                 .isMongoId()
                 .withMessage('appointments id should be objectId'),
             body('reasonOfVisit')
                 .optional()
-                .isAlphanumeric('en-US', { ignore: ' ' })
+                .isAlphanumeric('en-US', { ignore: 's' })
                 .withMessage('appointments reasonOfVisit must be an alpha'),
             body('date')
                 .optional()
@@ -55,6 +31,30 @@ appointmentRoute
         ],
         validationMW,
         appointmentController.createAppointment
+    )
+    .put(
+        [
+            body('doctorId')
+                .exists()
+                .withMessage('appointments id is required')
+                .isMongoId()
+                .withMessage('appointments id should be objectId'),
+            body('patientId')
+                .exists()
+                .withMessage('appointments id is required')
+                .isMongoId()
+                .withMessage('appointments id should be objectId'),
+            body('reasonOfVisit')
+                .optional()
+                .isAlphanumeric('en-US', { ignore: ' ' })
+                .withMessage('appointments reasonOfVisit must be an alpha'),
+            body('date')
+                .optional()
+                .isDate()
+                .withMessage('appointments expirationDate must be a date'),
+        ],
+        validationMW,
+        appointmentController.updateAppointment
     )
 
 appointmentRoute
@@ -68,7 +68,7 @@ appointmentRoute
                 .withMessage('appointments id should be objectId'),
         ],
         validationMW,
-        appointmentController.updateAppointment
+        appointmentController.getAppointmentById
     )
     .delete(
         [
