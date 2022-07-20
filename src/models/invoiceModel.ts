@@ -9,7 +9,7 @@ interface IInvoice extends Document {
 const InvoiceSchema = new Schema<IInvoice>({
     doctorId: {
         type: Schema.Types.ObjectId,
-        ref: 'doctors',
+        ref: 'Doctor',
         required: true,
     },
     patientId: {
