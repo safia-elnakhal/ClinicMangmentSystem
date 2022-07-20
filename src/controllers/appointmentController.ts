@@ -11,7 +11,7 @@ export const getAllAppointments = async (
     next: NextFunction
 ) => {
     try {
-        let sortType = request.query.sorting
+        const sortType = request.query.sorting
         let sort: {} = {}
 
         if (sortType === 'MostRecent') {

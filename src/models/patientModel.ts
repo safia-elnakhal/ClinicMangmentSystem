@@ -32,10 +32,10 @@ const PatientSchema = new Schema<IPatient>({
     // },
     name: {
         type: String,
-        match: [
-            /^[A-Z][A-Za-z ]{3,}[A-Z][A-Za-z ]{3,}[A-Z][A-Za-z ]{3,}$/,
-            'please enter Name (three words)the first letter capital ',
-        ],
+        // match: [
+        //     /^[A-Z][A-Za-z ]{3,}[A-Z][A-Za-z ]{3,}[A-Z][A-Za-z ]{3,}$/,
+        //     'please enter Name (three words)the first letter capital ',
+        // ],
         required: true,
     },
     email: {
@@ -53,10 +53,10 @@ const PatientSchema = new Schema<IPatient>({
     },
     password: {
         type: String,
-        match: [
-            /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/,
-            'password must be than 6 characters , contains at least one lowercase  one uppercase  at least one digit and special character',
-        ],
+        // match: [
+        //     /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/,
+        //     'password must be than 6 characters , contains at least one lowercase  one uppercase  at least one digit and special character',
+        // ],
         required: true,
     },
     historyOfDisease: {

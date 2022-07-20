@@ -11,6 +11,7 @@ export const createClinic = async (
     next: NextFunction
 ) => {
     try {
+<<<<<<< HEAD
         console.log(request.body.employeeId)
         const employeeArray: Array<Types.ObjectId> = request.body.employeeId
         employeeArray.forEach(async (employeeId) => {
@@ -21,6 +22,9 @@ export const createClinic = async (
                 throw new Error(`${employeeId} is not  valid employeeId`)
         })
         //! gives error if employeeId doesn't exist but saves in the database
+=======
+
+>>>>>>> origin/main
         const clinicProperties: IClinic = request.body
         const clinicObject = new Clinic(clinicProperties)
         const data = await clinicObject.save()
@@ -60,6 +64,17 @@ export const getAllClinicServices = async (
                 select: { name: 1, typeofEmployee: 1, role: 1 },
             }
         )
+
+        // http://localhost:8080/clinics/services?service=eyesight
+        // http://localhost:8080/clinics/services?service=eyelasic
+
+        let serviceSort = request.query.serviceName
+        let filter: {} = {}
+        if (serviceSort) {
+            filter = { 'services.name': serviceSort }
+        }
+
+        const data: IClinic[] = await Clinic.find(filter, { services: 1 })
         response.status(200).json({
             ClinicServices: data,
         })

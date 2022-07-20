@@ -9,14 +9,13 @@ export const getAllMedicines = async (
     response: Response,
     next: NextFunction
 ) => {
-    let sortType = request.query.sorting
+    const sortType = request.query.sorting
     let sort: {} = {}
     if (sortType === 'ExpiredDateAsc') {
         sort = { expirationDate: 1 }
     } else if (sortType === 'ExpiredDateDsc') {
         sort = { expirationDate: -1 }
-    }
-    else if (sortType === 'nameAZ') {
+    } else if (sortType === 'nameAZ') {
         sort = { name: 1 }
     } else if (sortType === 'nameZA') {
         sort = { name: -1 }

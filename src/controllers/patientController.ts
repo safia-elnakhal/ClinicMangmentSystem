@@ -24,12 +24,20 @@ export const getAllPatients = async (
     next: NextFunction
 ) => {
     try {
-        let sortType = request.query.sorting
-        let filterGender = request.query.gender
-        let filtermaxAge = request.query.maxAge
-        let filterminAge = request.query.minAge
+        // http://localhost:8080/patients?gender=female
+        // http://localhost:8080/patients?sorting=ageAsc
+        // http://localhost:8080/patients?sorting=ageDsc
+        // http://localhost:8080/patients?sorting=nameAZ
+        // http://localhost:8080/patients?sorting=nameZA
+        // http://localhost:8080/patients?maxAge=30
+        // http://localhost:8080/patients?minAge=30
 
-        let query: {} = {}
+        const sortType = request.query.sorting
+        const filterGender = request.query.gender
+        const filtermaxAge = request.query.maxAge
+        const filterminAge = request.query.minAge
+
+        let filter: {} = {}
         let sort: {} = {}
         if (sortType === 'nameAZ') {
             sort = { name: 1 }
@@ -40,15 +48,14 @@ export const getAllPatients = async (
         } else if (sortType === 'ageDsc') {
             sort = { age: -1 }
         } else if (filterGender) {
-            query = { gender: filterGender }
+            filter = { gender: filterGender }
         } else if (filtermaxAge) {
-            query = { age: { $lte: filtermaxAge } }
+            filter = { age: { $lte: filtermaxAge } }
         } else if (filterminAge) {
-            query = { age: { $gte: filterminAge } }
+            filter = { age: { $gte: filterminAge } }
         }
 
-
-        const data: IPatient[] = await Patient.find(query)
+        const data: IPatient[] = await Patient.find(filter)
             .populate({ path: 'reports.doctorId' })
             .populate({ path: 'reports.appointmentId' })
             .populate({ path: 'reports.invoiceId' })
@@ -57,10 +64,7 @@ export const getAllPatients = async (
     } catch (error) {
         next(error)
     }
-
 }
-
-
 
 // // Get All patient
 // export const getAllPatients = (request: Request, response: Response, next: NextFunction) => {
@@ -84,6 +88,32 @@ export const getPatientsById = async (
         const data: IPatient | null = await Patient.findOne({
             _id: request.params.id,
         })
+            .populate({ path: 'reports.doctorId' })
+            .populate({ path: 'reports.appointmentId' })
+            .populate({ path: 'reports.invoiceId' })
+
+        if (data) {
+            return response.status(200).send(data)
+        }
+        next(new Error(' patient not found'))
+    } catch (error) {
+        next(error)
+    }
+}
+
+export const getReportbyPatientId = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+    // eslint-disable-next-line consistent-return
+) => {
+    try {
+        const data: IPatient | null = await Patient.findOne(
+            {
+                _id: request.params.id,
+            },
+            { reports: 1 }
+        )
             .populate({ path: 'reports.doctorId' })
             .populate({ path: 'reports.appointmentId' })
             .populate({ path: 'reports.invoiceId' })

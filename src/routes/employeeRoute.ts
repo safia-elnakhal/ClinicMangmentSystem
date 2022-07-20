@@ -8,7 +8,19 @@ const routes = Router()
 
 routes
     .route('/employees')
-    .get(Controller.getAllEmployees)
+    .get(
+        authMW,
+        (request: any, response: Response, next: NextFunction) => {
+            if (request.role === 'admin') next()
+            else if (request.id === request.params.id) next()
+            else {
+                const error: any = new Error('Not authorized')
+                error.status = 403
+                next(error)
+            }
+        },
+        Controller.getAllEmployees
+    )
     .post(
         authMW,
         (request: any, response: Response, next: NextFunction) => {
@@ -21,8 +33,8 @@ routes
         },
         [
             body('name')
-                .isString()
-                .withMessage('employee name should be string'),
+                .isAlpha('en-US', { ignore: ' ' })
+                .withMessage('employee Name Must Be Characters'),
             body('email')
                 .isEmail()
                 .withMessage('employee Email should be Email'),
@@ -51,8 +63,8 @@ routes
         },
         [
             body('name')
-                .isString()
-                .withMessage('employee name should be string'),
+                .isAlpha('en-US', { ignore: '' })
+                .withMessage('employee Name Must Be Characters'),
             body('email')
                 .isEmail()
                 .withMessage('employee Email should be Email'),
@@ -70,10 +82,26 @@ routes
         Controller.updateEmployee
     )
 
+// user can access only his data
+// '/employees/32323232323'
+// - admin
+// - 32323232323
+// - sdsdsd false
+
 routes
     .route('/employees/:id')
     .get(
         [param('id').isMongoId().withMessage('employee id should be objectId')],
+        authMW,
+        (request: any, response: Response, next: NextFunction) => {
+            if (request.role === 'admin') next()
+            else if (request.id === request.params.id) next()
+            else {
+                const error: any = new Error('Not authorized')
+                error.status = 403
+                next(error)
+            }
+        },
         validationMW,
         Controller.getEmployeeByID
     )
