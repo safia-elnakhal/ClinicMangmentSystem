@@ -1,15 +1,17 @@
 import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as medicineController from '../controllers/medicineController'
-
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 import validationMW from '../middlewares/validationMW'
 
 const medicineRoute = Router()
 
 medicineRoute
     .route('/medicines')
-    .get(medicineController.getAllMedicines)
+    .get(authMW, adminOnly, medicineController.getAllMedicines)
     .post(
+        authMW,
+        adminOnly,
         [
             body('name')
                 .exists()
@@ -36,6 +38,8 @@ medicineRoute
 medicineRoute
     .route('/medicines/:id')
     .get(
+        authMW,
+        adminAndOwner,
         [
             param('id')
                 .exists()
@@ -47,6 +51,8 @@ medicineRoute
         medicineController.getMedicineById
     )
     .put(
+        authMW,
+        adminOnly,
         [
             param('id')
                 .exists()
@@ -74,6 +80,8 @@ medicineRoute
         medicineController.updateMedicine
     )
     .delete(
+        authMW,
+        adminOnly,
         [
             param('id')
                 .exists()

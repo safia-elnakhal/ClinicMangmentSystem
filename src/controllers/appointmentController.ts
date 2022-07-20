@@ -89,9 +89,22 @@ export const createAppointment = async (
         if (!patientInfo) throw new Error(`patientId isn't valid`)
 
         const data: IAppointment = request.body
-
+        console.log(data)
+        // if(doctorAppointments.includes(request.body.date))
+        //  throw new Error('This Appointement is not avalilable')
+        await Doctor.updateOne(
+            {
+                _id: request.body.doctorId,
+            },
+            {
+                $addToSet: {
+                    ' unavailableAppointments': request.body.date,
+                },
+            }
+        )
+        // await Doctor.save()
         const object = await Appointment.create(data)
-
+        const createdAppointment = await object.save()
         const sendingStates = await notifyUsers(doctorInfo, patientInfo)
 
         // response.status(201).json(object)
@@ -101,6 +114,31 @@ export const createAppointment = async (
     }
 }
 
+export const addAppointmentToDoctor = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    try {
+        const data: IAppointment = request.body
+        console.log(data)
+        // await Doctor.updateOne(
+        //     {
+        //         _id: request.body.doctorId,
+        //     },
+        //     {
+        //         $addToSet: {
+        //             ' unavailableAppointments': request.body.date,
+        //         },
+        //     }
+        // )
+        const object = new Appointment(data)
+        await object.save()
+        response.status(201).json(object)
+    } catch (error) {
+        next(error)
+    }
+}
 // Update Appointment
 export const updateAppointment = async (
     request: Request,

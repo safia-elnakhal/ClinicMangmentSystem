@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 import * as clinicController from '../controllers/clinicController'
 import validationMW from '../middlewares/validationMW'
 
@@ -9,20 +9,50 @@ const router = Router()
 router
     .route('/clinics')
     .post(
+        authMW,
+        adminOnly,
         [
-            body('name')
-                .isAlpha('en-US', { ignore: '' })
-                .withMessage('Service Name Must Be Characters'),
+            body('clinicName')
+                .isAlpha('en-US', { ignore: 's' })
+                .withMessage('clinicName Must Be Characters'),
+            body('contactNumber')
+                .isMobilePhone('ar-EG')
+                .withMessage('contactNumber Must Be Valid Egypt Phone Number'),
+            body('address')
+                .optional({ checkFalsy: true, nullable: true })
+                .isObject()
+                .withMessage('address must contain city,street,building'),
+            body('address.city')
+                .optional({ checkFalsy: true, nullable: true })
+                .isString()
+                .withMessage('address must contain city of type string '),
+            body('address.streetName')
+                .optional({ checkFalsy: true, nullable: true })
+                .isString()
+                .withMessage('address must contain streetName of type string'),
+            body('address.buildingNumber')
+                .optional({ checkFalsy: true, nullable: true })
+                .isNumeric()
+                .withMessage(
+                    'address must contain buildingNumber of type number'
+                ),
+            body('employeeId')
+                .isArray()
+                .withMessage('employeeId Must Be Array ')
+                .isMongoId()
+                .withMessage('employeeId must be objectId'),
         ],
         validationMW,
         clinicController.createClinic
     )
-    .get(clinicController.getAllClinicData)
+    .get(authMW, adminAndOwner, clinicController.getAllClinicData)
 
 router
     .route('/clinics/services')
-    .get(clinicController.getAllClinicServices)
+    .get(authMW, adminAndOwner, clinicController.getAllClinicServices)
     .put(
+        authMW,
+        adminOnly,
         [
             body('services.name') //! adding unique
                 // .isEmpty()
@@ -39,8 +69,13 @@ router
         validationMW,
         clinicController.updateClinicServices
     )
-    .delete(clinicController.deleteClinicServices)
+    .delete(authMW, adminOnly, clinicController.deleteClinicServices)
 
-router.get('/clinic/services/:id', clinicController.getClinicServiceById)
+router.get(
+    '/clinic/services/:id',
+    authMW,
+    adminAndOwner,
+    clinicController.getClinicServiceById
+)
 
 export default router
