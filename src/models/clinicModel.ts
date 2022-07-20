@@ -1,5 +1,4 @@
-import { Schema, Types, model } from 'mongoose'
-// import addressSchema, { IAddress } from "./addressModel";
+import { Schema, Types, model, Document } from 'mongoose'
 
 type Address = {
     city: string
@@ -22,21 +21,19 @@ const addressSchema: Schema = new Schema<Address>({
     },
 })
 
-interface IServices {
+interface IServices extends Document {
     name: string
     description: string
-    doctorId: [Types.ObjectId]
-    patientId?: [Types.ObjectId]
-    employeeId?: Types.ObjectId
+    doctorId: Types.Array<Types.ObjectId>
+    patientId?: Types.Array<Types.ObjectId>
 }
 
-interface IClinic {
+interface IClinic extends Document {
     _id: Types.ObjectId
     clinicName: string
     address: Address
     contactNumber: string
     doctorId: Types.ObjectId
-    patientId?: Types.ObjectId
     employeeId: Types.ObjectId
     services: Types.DocumentArray<IServices>
 }
@@ -55,21 +52,18 @@ const clinicSchema: Schema = new Schema<IClinic>(
             type: String,
             required: true,
         },
-        doctorId: {
-            type: Schema.Types.ObjectId,
-            ref: 'doctors',
-            // required: true,
-        },
-        patientId: {
-            type: Schema.Types.ObjectId,
-            ref: 'patients',
-            // required: true,
-        },
+        doctorId: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'doctors',
+                required: true,
+            },
+        ],
         employeeId: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'employee',
-                // required: true,
+                ref: 'employees',
+                required: true,
             },
         ],
         services: [
@@ -82,10 +76,7 @@ const clinicSchema: Schema = new Schema<IClinic>(
                 description: {
                     type: String,
                 },
-                employeeId: {
-                    type: Schema.Types.ObjectId,
-                    ref: 'employees',
-                },
+
                 doctorId: [
                     {
                         type: Schema.Types.ObjectId,
