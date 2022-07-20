@@ -30,7 +30,7 @@ appointmentRoute
                 .withMessage('appointments expirationDate must be a date'),
         ],
         validationMW,
-        appointmentController.getAppointmentById
+        appointmentController.createAppointment
     )
     .put(
         [
@@ -54,7 +54,7 @@ appointmentRoute
                 .withMessage('appointments expirationDate must be a date'),
         ],
         validationMW,
-        appointmentController.createAppointment
+        appointmentController.updateAppointment
     )
 
 appointmentRoute
@@ -68,7 +68,7 @@ appointmentRoute
                 .withMessage('appointments id should be objectId'),
         ],
         validationMW,
-        appointmentController.updateAppointment
+        appointmentController.getAppointmentById
     )
     .delete(
         [
