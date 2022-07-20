@@ -25,7 +25,7 @@ const addressSchema: Schema = new Schema<Address>({
 interface IServices extends Document {
     name: string
     description: string
-    price: string
+    servicePrice: string
     doctorId: Types.Array<Types.ObjectId>
     patientId?: Types.Array<Types.ObjectId>
 }
@@ -82,7 +82,7 @@ const clinicSchema: Schema = new Schema<IClinic>(
                 description: {
                     type: String,
                 },
-                price: {
+                servicePrice: {
                     type: Number,
                     get: (v: number) => (v / 100).toFixed(2),
                     set: (v: number) => v * 100,
