@@ -41,7 +41,7 @@ export const getPatientsById = async (
     try {
         const data: IPatient | null = await Patient.findOne({
             _id: req.params.id,
-        }).populate({ path: 'doctors' }).populate({ path: 'appointments' }).populate({ path: 'invoice' })
+        }).populate({ path: 'reports.doctorId' }).populate({ path: 'reports.appointmentId' }).populate({ path: 'reports.invoiceId' })
 
         if (data) {
             return res.status(200).send(data)
