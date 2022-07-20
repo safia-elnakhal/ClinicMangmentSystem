@@ -1,17 +1,14 @@
-// import * as express from "express";
-// import express = require('express')
-// import { Request, Response, NextFunction } from 'express'
-import express, { Application, Request, Response } from 'express'
+/* eslint-disable no-unused-vars */
 
-// import morgan = require('morgan')
+import express, { Application, NextFunction, Request, Response } from 'express'
 import morgan from 'morgan'
-// import mongoose from "mongoose";
 import mongoose from 'mongoose'
 import cors from 'cors'
-// import cors = require('cors')
+
 import employeeRoute from './routes/employeeRoute'
 import doctorRoutes from './routes/doctorRoutes'
 import patientRoutes from './routes/patientRoute'
+import invoiceRoutes from './routes/invoiceRoute'
 import clinicServicesRoute from './routes/clinicRoute'
 import loginRoute from './routes/loginRoute'
 
@@ -40,21 +37,20 @@ app.use(loginRoute)
 app.use(employeeRoute)
 app.use(doctorRoutes)
 app.use(patientRoutes)
+app.use(invoiceRoutes)
 app.use(clinicServicesRoute)
 
 // not-found middleware
-app.use((request: Request, response: Response) => {
-    // throw new Error("very big error"); //throwing an error causes the error handling middleware to work
+app.use((request: Request, response: Response, next: NextFunction) => {
     response.status(404).json({ message: 'Endpoint not found.' })
 })
 
 // handling errors middleware
-app.use((error: any, request: Request, response: Response) => {
-    const status: number = error.status || 500
-    response
-        .status(status)
-        .json({ Message: 'Internal Error', details: error.message })
-    // response
-    //   .status(error.status || 500)
-    //   .json({ message: 'Internal Error', details: error.message })
-})
+app.use(
+    (error: any, request: Request, response: Response, next: NextFunction) => {
+        const status: number = error.status || 500
+        response
+            .status(status)
+            .json({ Message: 'Internal Error', details: error.message })
+    }
+)
