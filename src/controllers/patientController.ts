@@ -24,6 +24,14 @@ export const getAllPatients = async (
     next: NextFunction
 ) => {
     try {
+        // http://localhost:8080/patients?gender=female
+        // http://localhost:8080/patients?sorting=ageAsc
+        // http://localhost:8080/patients?sorting=ageDsc
+        // http://localhost:8080/patients?sorting=nameAZ
+        // http://localhost:8080/patients?sorting=nameZA
+        // http://localhost:8080/patients?maxAge=30
+        // http://localhost:8080/patients?minAge=30
+
         let sortType = request.query.sorting
         let filterGender = request.query.gender
         let filtermaxAge = request.query.maxAge
