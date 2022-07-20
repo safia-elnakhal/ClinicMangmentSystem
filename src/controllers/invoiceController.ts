@@ -1,11 +1,32 @@
 import { Request, Response, NextFunction } from 'express'
 
-import convertString from '../utilities/convertString'
 import { Invoice, IInvoice } from '../models/invoiceModel'
 import { Patient as patientModel } from '../models/patientModel'
 import { Doctor as doctorModel } from '../models/doctorModel'
 
-// get all Invoice
+import convertString from '../utilities/convertString'
+
+import EmailClient from '../utilities/sendEmail'
+
+const invoiceEmailNotifier = new EmailClient()
+async function notifyUsers(
+    doctorInfo: any,
+    patientInfo: any
+): Promise<{ isSentToDoctor: boolean; isSentToPatient: boolean }> {
+    const doctorMsgState = await invoiceEmailNotifier.sendMessage(
+        'invoice',
+        doctorInfo.name,
+        doctorInfo.email
+    )
+    const patientMsgState = await invoiceEmailNotifier.sendMessage(
+        'invoice',
+        patientInfo.name,
+        patientInfo.email
+    )
+
+    return { isSentToDoctor: doctorMsgState, isSentToPatient: patientMsgState }
+}
+
 export const getAllInvoices = async (
     request: Request,
     response: Response,
@@ -62,21 +83,23 @@ export const createInvoice = async (
     next: NextFunction
 ) => {
     try {
-        const isDoctorValid = await doctorModel.exists({
-            _id: request.body.doctorId,
-        })
+        const doctorInfo = await doctorModel.findById(request.body.doctorId)
         // eslint-disable-next-line quotes
-        if (!isDoctorValid) throw new Error(`doctorId isn't valid`)
+        if (!doctorInfo) throw new Error(`doctorId isn't valid`)
 
-        const isPatientValid = await patientModel.exists({
-            _id: request.body.patientId,
-        })
+        const patientInfo = await patientModel.findById(request.body.patientId)
         // eslint-disable-next-line quotes
-        if (!isPatientValid) throw new Error(`patientId isn't valid`)
+        if (!patientInfo) throw new Error(`patientId isn't valid`)
 
         const invoiceObject = new Invoice({ ...request.body })
         const data = await invoiceObject.save()
-        response.status(201).json(data)
+
+        const sendingStates = await notifyUsers(doctorInfo, patientInfo)
+
+        response
+            .status(201)
+            // eslint-disable-next-line no-underscore-dangle
+            .json({ ...(data as unknown as any)._doc, sendingStates })
     } catch (error) {
         next(error)
     }
