@@ -1,8 +1,8 @@
 import { Schema, Types, model, Document } from 'mongoose'
 
 interface IAppointment extends Document {
-    doctorId?: Types.ObjectId
-    patientId?: Types.ObjectId
+    doctorId: Types.ObjectId
+    patientId: Types.ObjectId
     date: Date
     reasonOfVisit: string
 }
