@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as Controller from '../controllers/employeeController'
-import validationMW from '../middlewares/middleware'
+import validationMW from '../middlewares/validationMW'
 
 const routes = Router()
 

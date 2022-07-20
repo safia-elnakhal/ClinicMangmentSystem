@@ -9,7 +9,7 @@ import {
     getClinicServiceById,
     deleteClinicServices,
 } from '../controllers/clinicController'
-import validationMw from '../middlewares/validationMw'
+import validationMW from '../middlewares/validationMW'
 
 const router = Router()
 
@@ -21,7 +21,7 @@ router
                 .isAlpha('en-US', { ignore: '' })
                 .withMessage('Service Name Must Be Characters'),
         ],
-        validationMw,
+        validationMW,
         createClinic
     )
     .get(getAllClinicData)
@@ -43,7 +43,7 @@ router
             //     .isMongoId()
             //     .withMessage('DoctorId Must Be Of ObjectId Datatype '),
         ],
-        validationMw,
+        validationMW,
         updateClinicServices
     )
     .delete(deleteClinicServices)
