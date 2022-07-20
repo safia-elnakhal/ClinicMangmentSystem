@@ -40,7 +40,8 @@ export const getAllInvoices = async (
         } else if (sortType === 'LowtoHigh') {
             sort = { charge: 1 }
         }
-        const data: IInvoice[] = await Invoice.find({}).sort(sort)
+        const data: IInvoice[] = await Invoice.find({})
+            .sort(sort)
             .populate({
                 path: 'patientId',
                 select: { name: 1, email: 1 },
@@ -48,7 +49,8 @@ export const getAllInvoices = async (
             .populate({
                 path: 'doctorId',
                 select: { name: 1, email: 1 },
-            }).sort(sort)
+            })
+            .sort(sort)
 
         response.status(200).send(data)
     } catch (error) {
