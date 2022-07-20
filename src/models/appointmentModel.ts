@@ -10,7 +10,7 @@ interface IAppointment extends Document {
 const appointmentSchema = new Schema<IAppointment>({
     patientId: {
         type: Schema.Types.ObjectId,
-        ref: 'Patient',
+        ref: 'patients',
         required: true,
     },
     doctorId: {

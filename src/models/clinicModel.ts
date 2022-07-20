@@ -68,7 +68,7 @@ const clinicSchema: Schema = new Schema<IClinic>(
         employeeId: [
             {
                 type: Schema.Types.ObjectId,
-                ref: 'employee',
+                ref: 'employees',
                 // required: true,
             },
         ],
@@ -106,5 +106,5 @@ const clinicSchema: Schema = new Schema<IClinic>(
     }
 )
 
-const Clinic = model<IClinic>('clinic', clinicSchema)
+const Clinic = model<IClinic>('clinics', clinicSchema)
 export { Clinic, IClinic, IServices }
