@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import convertString from '../utilities/convertString'
 import { Invoice, IInvoice } from '../models/invoiceModel'
 import { Patient as patientModel } from '../models/patientModel'
-import doctorModel from '../models/doctorModel'
+import { Doctor as doctorModel } from '../models/doctorModel'
 
 export const getAllInvoices = async (
     req: Request,

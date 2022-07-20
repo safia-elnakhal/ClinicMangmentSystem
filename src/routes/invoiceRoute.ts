@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as invoiceController from '../controllers/invoiceController'
-import validationMW from '../middlewares/validationMw'
+import validationMW from '../middlewares/validationMW'
 
 const invoiceRoute = Router()
 
