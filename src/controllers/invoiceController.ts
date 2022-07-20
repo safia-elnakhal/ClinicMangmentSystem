@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express'
 
 import convertString from '../utilities/convertString'
 import { Invoice, IInvoice } from '../models/invoiceModel'
+import { Patient as patientModel } from '../models/patientModel'
+import doctorModel from '../models/doctorModel'
 
 export const getAllInvoices = async (
     req: Request,
@@ -43,10 +45,9 @@ export const getInvoiceById = async (
                 select: { name: 1, email: 1 },
             })
 
-        if (data) {
-            res.status(200).send(data)
-        }
-        throw new Error('invoice not found')
+        if (!data) throw new Error('invoice not found')
+
+        res.status(200).send(data)
     } catch (error) {
         next(error)
     }
@@ -58,11 +59,21 @@ export const createInvoice = async (
     next: NextFunction
 ) => {
     try {
-        const data: IInvoice = req.body
+        const isDoctorValid = await doctorModel.findOne({
+            _id: req.body.doctorId,
+        })
+        // eslint-disable-next-line quotes
+        if (!isDoctorValid) throw new Error(`doctorId isn't valid`)
 
-        const object = await Invoice.create(data)
+        const isPatientValid = await patientModel.findOne({
+            _id: req.body.patientId,
+        })
+        // eslint-disable-next-line quotes
+        if (!isPatientValid) throw new Error(`patientId isn't valid`)
 
-        res.status(201).json(object)
+        const invoiceObject = new Invoice({ ...req.body })
+        const data = await invoiceObject.save()
+        res.status(201).json(data)
     } catch (error) {
         next(error)
     }
@@ -74,14 +85,33 @@ export const updateInvoice = async (
     next: NextFunction
 ) => {
     try {
-        const data: IInvoice | null = await Invoice.findOneAndUpdate(
+        if (req.body.doctorId) {
+            const isDoctorValid = await doctorModel.exists({
+                _id: req.body.doctorId,
+            })
+            // eslint-disable-next-line quotes
+            if (!isDoctorValid) throw new Error(`doctorId isn't valid`)
+        }
+
+        if (req.body.patientId) {
+            const isPatientValid = await patientModel.exists({
+                _id: req.body.patientId,
+            })
+            // eslint-disable-next-line quotes
+            if (!isPatientValid) throw new Error(`patientId isn't valid`)
+        }
+
+        const data = await Invoice.updateOne(
             { _id: convertString.toObjectId(req.params.id) },
             { $set: req.body }
         )
+        console.log(data)
 
-        if (!data) {
-            throw new Error('invoice not found')
-        }
+        // if (!data) throw new Error('invoice not found')
+
+        if (data.matchedCount < 1) throw new Error('invoice not found')
+        if (data.modifiedCount < 1)
+            throw new Error('no update happened to invoice')
 
         res.status(200).json({ message: 'modified invoice' })
     } catch (error) {
@@ -99,7 +129,7 @@ export const deleteInvoiceById = async (
             _id: convertString.toObjectId(req.params.id),
         })
         if (data.deletedCount < 1) throw new Error('invoice not found')
-        res.status(200).json({ message: 'invoice deleted' })
+        res.status(200).json({ message: 'deleted invoice' })
     } catch (error) {
         next(error)
     }
