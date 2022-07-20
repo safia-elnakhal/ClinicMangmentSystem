@@ -128,7 +128,7 @@ export const updatePrescription = async (
             { _id: convertString.toObjectId(req.params.id) },
             { $set: req.body }
         )
-        console.log(data)
+        // console.log(data)
 
         // if (!data) throw new Error('prescription not found')
 

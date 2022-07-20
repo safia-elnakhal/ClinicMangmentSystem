@@ -5,11 +5,12 @@ import morgan from 'morgan'
 import mongoose from 'mongoose'
 import cors from 'cors'
 
-import employeeRoute from './routes/employeeRoute'
+import employeeRoutes from './routes/employeeRoute'
 import doctorRoutes from './routes/doctorRoutes'
 import patientRoutes from './routes/patientRoute'
 import invoiceRoutes from './routes/invoiceRoute'
-import medicineRoute from './routes/medicineRoute'
+import prescriptionRoutes from './routes/prescriptionRoute'
+import medicineRoutes from './routes/medicineRoute'
 import clinicServicesRoute from './routes/clinicRoute'
 import loginRoute from './routes/loginRoute'
 
@@ -35,11 +36,12 @@ app.use(morgan(':method :url'))
 app.use(express.json())
 
 app.use(loginRoute)
-app.use(employeeRoute)
+app.use(employeeRoutes)
 app.use(doctorRoutes)
 app.use(patientRoutes)
 app.use(invoiceRoutes)
-app.use(medicineRoute)
+app.use(prescriptionRoutes)
+app.use(medicineRoutes)
 app.use(clinicServicesRoute)
 
 // not-found middleware

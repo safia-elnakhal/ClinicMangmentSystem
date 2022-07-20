@@ -28,7 +28,7 @@ interface IPrescription extends Document {
 const PrescriptionSchema = new Schema<IPrescription>({
     doctorId: {
         type: Schema.Types.ObjectId,
-        ref: 'doctors',
+        ref: 'Doctor',
         required: true,
     },
     medicineId: {
