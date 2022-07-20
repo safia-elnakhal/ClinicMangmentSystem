@@ -2,6 +2,19 @@ import { Request, Response, NextFunction } from 'express'
 import convertString from '../utilities/convertString'
 import { Doctor, IDoctor } from '../models/doctorModel'
 
+import EmailClient from '../utilities/sendEmail'
+
+const emailNotifier = new EmailClient()
+async function notifyUser(userInfo: any): Promise<boolean> {
+    const msgState = await emailNotifier.sendMessage(
+        'doctor_creation',
+        userInfo.name,
+        userInfo.email
+    )
+
+    return msgState
+}
+
 // Get All Doctors
 export const getAllDoctor = async (
     req: Request,
@@ -33,7 +46,6 @@ export const getAllDoctor = async (
             query = { age: { $gte: filterminAge } }
         } else if (filterSpecialty) {
             query = { specialty: filterSpecialty }
-
         }
 
         const data: IDoctor[] = await Doctor.find(query).sort(sort)
@@ -98,7 +110,9 @@ export const createDoctor = async (
 
         const object = await Doctor.create(data)
 
-        res.status(201).json(object)
+        const isEmailSentToUser = await notifyUser(data)
+        res.status(201).json({ createdDoctor: object, isEmailSentToUser })
+        // res.status(201).json(object)/
     } catch (error) {
         next(error)
     }

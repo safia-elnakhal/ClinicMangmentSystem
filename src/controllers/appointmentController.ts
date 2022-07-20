@@ -2,6 +2,29 @@ import { Request, Response, NextFunction } from 'express'
 
 import convertString from '../utilities/convertString'
 import { Appointment, IAppointment } from '../models/appointmentModel'
+import { Patient as patientModel } from '../models/patientModel'
+import { Doctor as doctorModel } from '../models/doctorModel'
+
+import EmailClient from '../utilities/sendEmail'
+
+const emailNotifier = new EmailClient()
+async function notifyUsers(
+    doctorInfo: any,
+    patientInfo: any
+): Promise<{ isSentToDoctor: boolean; isSentToPatient: boolean }> {
+    const doctorMsgState = await emailNotifier.sendMessage(
+        'appointment_creation',
+        doctorInfo.name,
+        doctorInfo.email
+    )
+    const patientMsgState = await emailNotifier.sendMessage(
+        'appointment_creation',
+        patientInfo.name,
+        patientInfo.email
+    )
+
+    return { isSentToDoctor: doctorMsgState, isSentToPatient: patientMsgState }
+}
 
 // Get all Appointments
 export const getAllAppointments = async (
@@ -57,11 +80,22 @@ export const createAppointment = async (
     next: NextFunction
 ) => {
     try {
+        const doctorInfo = await doctorModel.findById(request.body.doctorId)
+        // eslint-disable-next-line quotes
+        if (!doctorInfo) throw new Error(`doctorId isn't valid`)
+
+        const patientInfo = await patientModel.findById(request.body.patientId)
+        // eslint-disable-next-line quotes
+        if (!patientInfo) throw new Error(`patientId isn't valid`)
+
         const data: IAppointment = request.body
 
         const object = await Appointment.create(data)
 
-        response.status(201).json(object)
+        const sendingStates = await notifyUsers(doctorInfo, patientInfo)
+
+        // response.status(201).json(object)
+        response.status(201).json({ createdAppointment: object, sendingStates })
     } catch (error) {
         next(error)
     }

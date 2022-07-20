@@ -8,18 +8,18 @@ import convertString from '../utilities/convertString'
 
 import EmailClient from '../utilities/sendEmail'
 
-const invoiceEmailNotifier = new EmailClient()
+const emailNotifier = new EmailClient()
 async function notifyUsers(
     doctorInfo: any,
     patientInfo: any
 ): Promise<{ isSentToDoctor: boolean; isSentToPatient: boolean }> {
-    const doctorMsgState = await invoiceEmailNotifier.sendMessage(
-        'invoice',
+    const doctorMsgState = await emailNotifier.sendMessage(
+        'invoice_creation',
         doctorInfo.name,
         doctorInfo.email
     )
-    const patientMsgState = await invoiceEmailNotifier.sendMessage(
-        'invoice',
+    const patientMsgState = await emailNotifier.sendMessage(
+        'invoice_creation',
         patientInfo.name,
         patientInfo.email
     )

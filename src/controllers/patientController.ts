@@ -5,15 +5,15 @@ import { Patient, IPatient } from '../models/patientModel'
 
 import EmailClient from '../utilities/sendEmail'
 
-const invoiceEmailNotifier = new EmailClient()
-async function notifyUser(patientInfo: any): Promise<boolean> {
-    const patientMsgState = await invoiceEmailNotifier.sendMessage(
-        'user_creation',
-        patientInfo.name,
-        patientInfo.email
+const emailNotifier = new EmailClient()
+async function notifyUser(userInfo: any): Promise<boolean> {
+    const msgState = await emailNotifier.sendMessage(
+        'patient_creation',
+        userInfo.name,
+        userInfo.email
     )
 
-    return patientMsgState
+    return msgState
 }
 
 // Get All patient
