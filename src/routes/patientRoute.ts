@@ -70,4 +70,9 @@ patientRoute
         patientController.updatePatient
     )
 
+patientRoute.route("/patients/:id/report")
+    .get(
+        [param('id').isMongoId().withMessage('patient id should be objectId')], validationMW,
+
+        patientController.getReportbyPatientId)
 export default patientRoute
