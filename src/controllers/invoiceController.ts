@@ -59,13 +59,13 @@ export const createInvoice = async (
     next: NextFunction
 ) => {
     try {
-        const isDoctorValid = await doctorModel.findOne({
+        const isDoctorValid = await doctorModel.exists({
             _id: req.body.doctorId,
         })
         // eslint-disable-next-line quotes
         if (!isDoctorValid) throw new Error(`doctorId isn't valid`)
 
-        const isPatientValid = await patientModel.findOne({
+        const isPatientValid = await patientModel.exists({
             _id: req.body.patientId,
         })
         // eslint-disable-next-line quotes
