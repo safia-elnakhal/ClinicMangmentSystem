@@ -29,7 +29,7 @@ export const getInvoiceById = async (
         if (data) {
             res.status(200).send(data)
         }
-        next(new Error('invoice not found'))
+        throw new Error('invoice not found')
     } catch (error) {
         next(error)
     }
@@ -81,7 +81,7 @@ export const deleteInvoiceById = async (
         const data = await Invoice.deleteOne({
             _id: convertString.toObjectId(req.params.id),
         })
-        if (data.deletedCount < 1) throw new Error('invoice  not found')
+        if (data.deletedCount < 1) throw new Error('invoice not found')
         res.status(200).json({ message: 'invoice deleted' })
     } catch (error) {
         next(error)
