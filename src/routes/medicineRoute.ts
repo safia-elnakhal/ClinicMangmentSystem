@@ -13,11 +13,11 @@ medicineRoute
             body('name')
                 .exists()
                 .withMessage('medicine name is required')
-                .isAlpha()
+                .isAlphanumeric('en-US', { ignore: ' ' })
                 .withMessage('medicine name must be an alpha'),
             body('description')
                 .optional()
-                .isAlpha()
+                .isAlphanumeric('en-US', { ignore: ' ' })
                 .withMessage('medicine description must be an alpha'),
             body('expirationDate')
                 .optional()
@@ -25,7 +25,7 @@ medicineRoute
                 .withMessage('medicine description must be a date'),
             body('takingInstructions')
                 .optional()
-                .isAlpha()
+                .isAlphanumeric('en-US', { ignore: ' ' })
                 .withMessage('medicine takingInstructions must be an alpha'),
         ],
         validationMW,
@@ -54,11 +54,11 @@ medicineRoute
                 .withMessage('medicine id should be objectId'),
             body('name')
                 .optional()
-                .isAlpha()
+                .isAlphanumeric('en-US', { ignore: ' ' })
                 .withMessage('medicine name must be an alpha'),
             body('description')
                 .optional()
-                .isAlpha()
+                .isAlphanumeric('en-US', { ignore: ' ' })
                 .withMessage('medicine description must be an alpha'),
             body('expirationDate')
                 .optional()
@@ -66,7 +66,7 @@ medicineRoute
                 .withMessage('medicine description must be a date'),
             body('takingInstructions')
                 .optional()
-                .isAlpha()
+                .isAlphanumeric('en-US', { ignore: ' ' })
                 .withMessage('medicine takingInstructions must be an alpha'),
         ],
         validationMW,

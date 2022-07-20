@@ -9,6 +9,7 @@ import employeeRoute from './routes/employeeRoute'
 import doctorRoutes from './routes/doctorRoutes'
 import patientRoutes from './routes/patientRoute'
 import invoiceRoutes from './routes/invoiceRoute'
+import medicineRoute from './routes/medicineRoute'
 import clinicServicesRoute from './routes/clinicRoute'
 import loginRoute from './routes/loginRoute'
 
@@ -38,6 +39,7 @@ app.use(employeeRoute)
 app.use(doctorRoutes)
 app.use(patientRoutes)
 app.use(invoiceRoutes)
+app.use(medicineRoute)
 app.use(clinicServicesRoute)
 
 // not-found middleware
