@@ -13,6 +13,9 @@ import prescriptionRoutes from './routes/prescriptionRoute'
 import medicineRoutes from './routes/medicineRoute'
 import clinicRoute from './routes/clinicRoute'
 import loginRoute from './routes/loginRoute'
+import appointmentRoute from "./routes/appointmentRoute"
+
+
 
 require('dotenv').config()
 
@@ -43,6 +46,8 @@ app.use(invoiceRoutes)
 app.use(prescriptionRoutes)
 app.use(medicineRoutes)
 app.use(clinicRoute)
+
+app.use(appointmentRoute)
 
 // not-found middleware
 app.use((request: Request, response: Response, next: NextFunction) => {

@@ -1,14 +1,24 @@
-import { Router } from 'express'
+import { Response, NextFunction, Router } from 'express'
 import { body, param } from 'express-validator'
 import * as Controller from '../controllers/employeeController'
 import validationMW from '../middlewares/validationMW'
+import authMW from '../middlewares/authMW'
 
 const routes = Router()
 
 routes
-    .route('/employee')
+    .route('/employees')
     .get(Controller.getAllEmployees)
     .post(
+        authMW,
+        (request: any, response: Response, next: NextFunction) => {
+            if (request.role === 'admin') next()
+            else {
+                const error: any = new Error('Not authorized')
+                error.status = 403
+                next(error)
+            }
+        },
         [
             body('name')
                 .isString()
@@ -30,6 +40,15 @@ routes
         Controller.createEmployee
     )
     .put(
+        authMW,
+        (request: any, response: Response, next: NextFunction) => {
+            if (request.role === 'admin') next()
+            else {
+                const error: any = new Error('Not authorized')
+                error.status = 403
+                next(error)
+            }
+        },
         [
             body('name')
                 .isString()
@@ -52,13 +71,22 @@ routes
     )
 
 routes
-    .route('/employee/:id')
+    .route('/employees/:id')
     .get(
         [param('id').isMongoId().withMessage('employee id should be objectId')],
         validationMW,
         Controller.getEmployeeByID
     )
     .delete(
+        authMW,
+        (request: any, response: Response, next: NextFunction) => {
+            if (request.role === 'admin') next()
+            else {
+                const error: any = new Error('Not authorized')
+                error.status = 403
+                next(error)
+            }
+        },
         [param('id').isMongoId().withMessage('employee id should be objectId')],
         validationMW,
         Controller.deleteEmployee

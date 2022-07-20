@@ -1,20 +1,13 @@
 import { Router } from 'express'
-import { param, body } from 'express-validator'
+import { body } from 'express-validator'
 
-import {
-    createClinic,
-    getAllClinicData,
-    getAllClinicServices,
-    updateClinicServices,
-    getClinicServiceById,
-    deleteClinicServices,
-} from '../controllers/clinicController'
+import * as clinicController from '../controllers/clinicController'
 import validationMW from '../middlewares/validationMW'
 
 const router = Router()
 
 router
-    .route('/clinic')
+    .route('/clinics')
     .post(
         [
             body('clinicName')
@@ -48,13 +41,13 @@ router
                 .withMessage('employeeId must be objectId'),
         ],
         validationMW,
-        createClinic
+        clinicController.createClinic
     )
-    .get(getAllClinicData)
+    .get(clinicController.getAllClinicData)
 
 router
-    .route('/clinic/services')
-    .get(getAllClinicServices)
+    .route('/clinics/services')
+    .get(clinicController.getAllClinicServices)
     .put(
         [
             body('services.name') //! adding unique
@@ -70,10 +63,10 @@ router
             //     .withMessage('DoctorId Must Be Of ObjectId Datatype '),
         ],
         validationMW,
-        updateClinicServices
+        clinicController.updateClinicServices
     )
-    .delete(deleteClinicServices)
+    .delete(clinicController.deleteClinicServices)
 
-router.get('/clinic/services/:id', getClinicServiceById)
+router.get('/clinic/services/:id', clinicController.getClinicServiceById)
 
 export default router

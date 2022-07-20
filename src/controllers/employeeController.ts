@@ -1,105 +1,168 @@
-/* eslint-disable no-restricted-syntax */
-/* eslint-disable no-param-reassign */
-/* eslint-disable guard-for-in */
-/* eslint-disable no-unused-vars */
-import mongoose from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcrypt'
-
-require('../models/employeeModel')
+import convertString from '../utilities/convertString'
+import { Employee, IEmployee } from '../models/employeeModel'
 
 const saltRounds = 10
 
-const Employee = mongoose.model('Employee')
-
 // Get All Employees
-export const getAllEmployees = (
+export const getAllEmployees = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    Employee.find({})
-        .then((data: any) => {
-            response.status(200).json(data)
-        })
-        .catch((error: Error) => {
-            next(error)
-        })
+    try {
+        const data: IEmployee[] = await Employee.find({})
+        response.status(200).send(data)
+    } catch (error) {
+        next(error)
+    }
 }
+
+// export const getAllEmployees = async (
+//     request: Request,
+//     response: Response,
+//     next: NextFunction
+// ) => {
+//     Employee.find({})
+//         .then((data: any) => {
+//             response.status(200).json(data)
+//         })
+//         .catch((error: Error) => {
+//             next(error)
+//         })
+// }
 
 // Get Employee By ID
-export const getEmployeeByID = (
+export const getEmployeeByID = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    Employee.findOne({ _id: request.params.id })
-        .then((data: any) => {
-            if (data == null) next(new Error(' Employee not found'))
-            response.status(200).json(data)
+    try {
+        const data: IEmployee | null = await Employee.findOne({
+            _id: request.params.id,
         })
-        .catch((error: any) => {
-            next(error)
-        })
+
+        if (!data) throw new Error('Employee not found')
+
+        response.status(200).send(data)
+    } catch (error) {
+        next(error)
+    }
 }
 
+// export const getEmployeeByID = (
+//     request: Request,
+//     response: Response,
+//     next: NextFunction
+// ) => {
+//     Employee.findOne({ _id: request.params.id })
+//         .then((data: any) => {
+//             if (data == null) next(new Error(' Employee not found'))
+//             response.status(200).json(data)
+//         })
+//         .catch((error: any) => {
+//             next(error)
+//         })
+// }
+
 // Create Employee
-export const createEmployee = (
+export const createEmployee = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    const object = new Employee({
-        name: request.body.name,
-        age: request.body.age,
-        email: request.body.email,
-        password: bcrypt.hashSync(request.body.password, saltRounds),
-        typeofEmployee: request.body.typeofEmployee,
-        role: request.body.role,
-    })
-    object
-        .save()
-        .then((data: any) => {
-            response.status(201).json({ data: 'added' })
+    try {
+        const object = new Employee({
+            name: request.body.name,
+            age: request.body.age,
+            email: request.body.email,
+            password: bcrypt.hashSync(request.body.password, saltRounds),
+            typeofEmployee: request.body.typeofEmployee,
+            role: request.body.role,
         })
-        .catch((error: Error) => next(error))
+        const data = await object.save()
+        response.status(201).json(data)
+    } catch (error) {
+        next(error)
+    }
 }
 
 // Update Employee By ID
-export const updateEmployee = (
+export const updateEmployee = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    // console.log(request.body.id);
-    Employee.findById(request.body.id)
-        .then((data: any) => {
-            for (const key in request.body) {
-                data[key] = request.body[key]
-            }
-            data.save()
-            response.status(200).json({ data: 'updated' })
-        })
-        .catch((error: Error) => {
-            next(error)
-        })
+    try {
+        const data = await Employee.updateOne(
+            { _id: convertString.toObjectId(request.params.id) },
+            { $set: request.body }
+        )
+        console.log(data)
+
+        if (!data.acknowledged)
+            throw new Error('entered data not follow schema')
+        if (data.matchedCount < 1) throw new Error('Employee not found')
+        if (data.modifiedCount < 1)
+            throw new Error('no update happened to Employee')
+
+        response.status(200).json({ message: 'modified Employee' })
+    } catch (error) {
+        next(error)
+    }
 }
+// export const updateEmployee = (
+//     request: Request,
+//     response: Response,
+//     next: NextFunction
+// ) => {
+//     // console.log(request.body.id);
+//     Employee.findById(request.body.id)
+//         .then((data: any) => {
+//             // eslint-disable-next-line no-restricted-syntax, guard-for-in
+//             for (const key in request.body) {
+//                 data[key] = request.body[key]
+//             }
+//             data.save()
+//             response.status(200).json({ data: 'updated' })
+//         })
+//         .catch((error: Error) => {
+//             next(error)
+//         })
+// }
 
 // Delete Employee By ID
-export const deleteEmployee = (
+export const deleteEmployee = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    Employee.deleteOne({ _id: request.params.id })
-        .then((data: any) => {
-            if (!data) {
-                next(new Error(' Employee not found'))
-            } else {
-                response.status(200).json({ data: 'deleted' })
-            }
+    try {
+        const data = await Employee.deleteOne({
+            _id: convertString.toObjectId(request.params.id),
         })
-        .catch((error: Error) => {
-            next(error)
-        })
+        if (data.deletedCount < 1) throw new Error('Employee not found')
+        response.status(200).json({ message: 'deleted Employee' })
+    } catch (error) {
+        next(error)
+    }
 }
+// export const deleteEmployee = (
+//     request: Request,
+//     response: Response,
+//     next: NextFunction
+// ) => {
+//     Employee.deleteOne({ _id: request.params.id })
+//         .then((data: any) => {
+//             if (!data) {
+//                 next(new Error(' Employee not found'))
+//             } else {
+//                 response.status(200).json({ data: 'deleted' })
+//             }
+//         })
+//         .catch((error: Error) => {
+//             next(error)
+//         })
+// }

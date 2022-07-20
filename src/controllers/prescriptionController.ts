@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from 'express'
-
 import convertString from '../utilities/convertString'
+
 import { Prescription, IPrescription } from '../models/prescriptionModel'
 import { Patient as patientModel } from '../models/patientModel'
 import { Doctor as doctorModel } from '../models/doctorModel'
 import { Medicine as medicineModel } from '../models/medicineModel'
 
+// get all prescriptions
 export const getAllPrescriptions = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
@@ -26,20 +27,21 @@ export const getAllPrescriptions = async (
                 select: { name: 1, description: 1, takingInstructions: 1 },
             })
 
-        res.status(200).send(data)
+        response.status(200).send(data)
     } catch (error) {
         next(error)
     }
 }
 
+// get  prescriptions by ID
 export const getPrescriptionById = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
         const data: IPrescription | null = await Prescription.findOne({
-            _id: req.params.id,
+            _id: request.params.id,
         })
             .populate({
                 path: 'patientId',
@@ -56,77 +58,80 @@ export const getPrescriptionById = async (
 
         if (!data) throw new Error('prescription not found')
 
-        res.status(200).send(data)
+        response.status(200).send(data)
     } catch (error) {
         next(error)
     }
 }
 
+// create prescriptions
+
 export const createPrescription = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
         const isDoctorValid = await doctorModel.exists({
-            _id: req.body.doctorId,
+            _id: request.body.doctorId,
         })
         // eslint-disable-next-line quotes
         if (!isDoctorValid) throw new Error(`doctorId isn't valid`)
 
         const isPatientValid = await patientModel.exists({
-            _id: req.body.patientId,
+            _id: request.body.patientId,
         })
         // eslint-disable-next-line quotes
         if (!isPatientValid) throw new Error(`patientId isn't valid`)
 
         const isMedicineValid = await medicineModel.exists({
-            _id: req.body.medicineId,
+            _id: request.body.medicineId,
         })
         // eslint-disable-next-line quotes
         if (!isMedicineValid) throw new Error(`medicineId isn't valid`)
 
-        const prescriptionObject = new Prescription({ ...req.body })
+        const prescriptionObject = new Prescription({ ...request.body })
         const data = await prescriptionObject.save()
-        res.status(201).json(data)
+        response.status(201).json(data)
     } catch (error) {
         next(error)
     }
 }
 
+// update prescriptions
 export const updatePrescription = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
-        if (req.body.doctorId) {
+        if (request.body.doctorId) {
             const isDoctorValid = await doctorModel.exists({
-                _id: req.body.doctorId,
+                _id: request.body.doctorId,
             })
             // eslint-disable-next-line quotes
             if (!isDoctorValid) throw new Error(`doctorId isn't valid`)
         }
 
-        if (req.body.patientId) {
+        if (request.body.patientId) {
             const isPatientValid = await patientModel.exists({
-                _id: req.body.patientId,
+                _id: request.body.patientId,
             })
             // eslint-disable-next-line quotes
             if (!isPatientValid) throw new Error(`patientId isn't valid`)
         }
 
-        if (req.body.medicineId) {
+        if (request.body.medicineId) {
             const isMedicineValid = await medicineModel.exists({
-                _id: req.body.medicineId,
+                _id: request.body.medicineId,
             })
             // eslint-disable-next-line quotes
             if (!isMedicineValid) throw new Error(`medicineId isn't valid`)
         }
 
         const data = await Prescription.updateOne(
-            { _id: convertString.toObjectId(req.params.id) },
-            { $set: req.body }
+            { _id: convertString.toObjectId(request.params.id) },
+            { $set: request.body }
         )
         // console.log(data)
 
@@ -136,23 +141,24 @@ export const updatePrescription = async (
         if (data.modifiedCount < 1)
             throw new Error('no update happened to prescription')
 
-        res.status(200).json({ message: 'modified prescription' })
+        response.status(200).json({ message: 'modified prescription' })
     } catch (error) {
         next(error)
     }
 }
 
+// delete prescription by ID
 export const deletePrescriptionById = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
         const data = await Prescription.deleteOne({
-            _id: convertString.toObjectId(req.params.id),
+            _id: convertString.toObjectId(request.params.id),
         })
         if (data.deletedCount < 1) throw new Error('prescription not found')
-        res.status(200).json({ message: 'deleted prescription' })
+        response.status(200).json({ message: 'deleted prescription' })
     } catch (error) {
         next(error)
     }

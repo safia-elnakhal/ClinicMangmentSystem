@@ -4,6 +4,7 @@ import { Types } from 'mongoose'
 import { Clinic, IClinic } from '../models/clinicModel'
 import { Employee, IEmployee } from '../models/employeeModel'
 
+// create Clinic
 export const createClinic = async (
     request: Request,
     response: Response,

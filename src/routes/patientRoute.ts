@@ -2,12 +2,12 @@ import { Router } from 'express'
 import * as patientController from '../controllers/patientController'
 import validationMW from '../middlewares/validationMW'
 
-const { body, param, query } = require('express-validator')
+const { body, param } = require('express-validator')
 
 const patientRoute = Router()
 
 patientRoute
-    .route('/patient')
+    .route('/patients')
     .get(patientController.getAllPatients)
     .post(
         [
@@ -33,6 +33,19 @@ patientRoute
         patientController.createPatient
     )
 
+patientRoute
+    .route('/patients/:id')
+    .delete(
+        [param('id').isMongoId().withMessage('patient id should be objectId')],
+        validationMW,
+        patientController.deletePatientById
+    )
+
+    .get(
+        [param('id').isMongoId().withMessage('patient id should be objectId')],
+        validationMW,
+        patientController.getPatientsById
+    )
     .put(
         [
             body('name').isAlpha().withMessage('patient name should be string'),
@@ -55,20 +68,6 @@ patientRoute
         ],
         validationMW,
         patientController.updatePatient
-    )
-
-patientRoute
-    .route('/patient/:id')
-    .delete(
-        [param('id').isMongoId().withMessage('patient id should be objectId')],
-        validationMW,
-        patientController.deletePatientById
-    )
-
-    .get(
-        [param('id').isMongoId().withMessage('patient id should be objectId')],
-        validationMW,
-        patientController.getPatientsById
     )
 
 export default patientRoute

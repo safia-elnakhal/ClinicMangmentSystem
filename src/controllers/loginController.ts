@@ -1,6 +1,5 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
-// import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express'
 

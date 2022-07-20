@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express'
 
 const jwt = require('jsonwebtoken')
 
-module.exports = (request: any, response: Response, next: NextFunction) => {
+export default (request: any, response: Response, next: NextFunction) => {
     let decodedToekn = null
     try {
         const token: string = request.get('Authorization').split(' ')[1]

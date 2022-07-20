@@ -1,17 +1,46 @@
 import { Request, Response, NextFunction } from 'express'
 
-import convertString from '../utilities/convertString'
 import { Invoice, IInvoice } from '../models/invoiceModel'
 import { Patient as patientModel } from '../models/patientModel'
 import { Doctor as doctorModel } from '../models/doctorModel'
 
+import convertString from '../utilities/convertString'
+
+import EmailClient from '../utilities/sendEmail'
+
+const invoiceEmailNotifier = new EmailClient()
+async function notifyUsers(
+    doctorInfo: any,
+    patientInfo: any
+): Promise<{ isSentToDoctor: boolean; isSentToPatient: boolean }> {
+    const doctorMsgState = await invoiceEmailNotifier.sendMessage(
+        'invoice',
+        doctorInfo.name,
+        doctorInfo.email
+    )
+    const patientMsgState = await invoiceEmailNotifier.sendMessage(
+        'invoice',
+        patientInfo.name,
+        patientInfo.email
+    )
+
+    return { isSentToDoctor: doctorMsgState, isSentToPatient: patientMsgState }
+}
+
 export const getAllInvoices = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
-        const data: IInvoice[] = await Invoice.find({})
+        let sortType = req.query.sorting
+        let sort: {} = {}
+        if (sortType === 'HightoLow') {
+            sort = { charge: -1 }
+        } else if (sortType === 'LowtoHigh') {
+            sort = { charge: 1 }
+        }
+        const data: IInvoice[] = await Invoice.find({}).sort(sort)
             .populate({
                 path: 'patientId',
                 select: { name: 1, email: 1 },
@@ -19,22 +48,23 @@ export const getAllInvoices = async (
             .populate({
                 path: 'doctorId',
                 select: { name: 1, email: 1 },
-            })
+            }).sort(sort)
 
-        res.status(200).send(data)
+        response.status(200).send(data)
     } catch (error) {
         next(error)
     }
 }
 
+// get Invoice by Id
 export const getInvoiceById = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
         const data: IInvoice | null = await Invoice.findOne({
-            _id: req.params.id,
+            _id: request.params.id,
         })
             .populate({
                 path: 'patientId',
@@ -47,63 +77,67 @@ export const getInvoiceById = async (
 
         if (!data) throw new Error('invoice not found')
 
-        res.status(200).send(data)
+        response.status(200).send(data)
     } catch (error) {
         next(error)
     }
 }
 
+// create Invoice
 export const createInvoice = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
-        const isDoctorValid = await doctorModel.exists({
-            _id: req.body.doctorId,
-        })
+        const doctorInfo = await doctorModel.findById(request.body.doctorId)
         // eslint-disable-next-line quotes
-        if (!isDoctorValid) throw new Error(`doctorId isn't valid`)
+        if (!doctorInfo) throw new Error(`doctorId isn't valid`)
 
-        const isPatientValid = await patientModel.exists({
-            _id: req.body.patientId,
-        })
+        const patientInfo = await patientModel.findById(request.body.patientId)
         // eslint-disable-next-line quotes
-        if (!isPatientValid) throw new Error(`patientId isn't valid`)
+        if (!patientInfo) throw new Error(`patientId isn't valid`)
 
-        const invoiceObject = new Invoice({ ...req.body })
+        const invoiceObject = new Invoice({ ...request.body })
         const data = await invoiceObject.save()
-        res.status(201).json(data)
+
+        const sendingStates = await notifyUsers(doctorInfo, patientInfo)
+
+        response
+            .status(201)
+            // eslint-disable-next-line no-underscore-dangle
+            .json({ ...(data as unknown as any)._doc, sendingStates })
     } catch (error) {
         next(error)
     }
 }
 
+// update Invoice
 export const updateInvoice = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
-        if (req.body.doctorId) {
+        if (request.body.doctorId) {
             const isDoctorValid = await doctorModel.exists({
-                _id: req.body.doctorId,
+                _id: request.body.doctorId,
             })
             // eslint-disable-next-line quotes
             if (!isDoctorValid) throw new Error(`doctorId isn't valid`)
         }
 
-        if (req.body.patientId) {
+        if (request.body.patientId) {
             const isPatientValid = await patientModel.exists({
-                _id: req.body.patientId,
+                _id: request.body.patientId,
             })
             // eslint-disable-next-line quotes
             if (!isPatientValid) throw new Error(`patientId isn't valid`)
         }
 
         const data = await Invoice.updateOne(
-            { _id: convertString.toObjectId(req.params.id) },
-            { $set: req.body }
+            { _id: convertString.toObjectId(request.params.id) },
+            { $set: request.body }
         )
         console.log(data)
 
@@ -113,23 +147,24 @@ export const updateInvoice = async (
         if (data.modifiedCount < 1)
             throw new Error('no update happened to invoice')
 
-        res.status(200).json({ message: 'modified invoice' })
+        response.status(200).json({ message: 'modified invoice' })
     } catch (error) {
         next(error)
     }
 }
 
+// delete Invoice by Id
 export const deleteInvoiceById = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
         const data = await Invoice.deleteOne({
-            _id: convertString.toObjectId(req.params.id),
+            _id: convertString.toObjectId(request.params.id),
         })
         if (data.deletedCount < 1) throw new Error('invoice not found')
-        res.status(200).json({ message: 'deleted invoice' })
+        response.status(200).json({ message: 'deleted invoice' })
     } catch (error) {
         next(error)
     }
