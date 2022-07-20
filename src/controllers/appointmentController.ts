@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 
 import convertString from '../utilities/convertString'
 import { Appointment, IAppointment } from '../models/appointmentModel'
-import { Doctor, IDoctor } from '../models/doctorModel'
+import { Doctor } from '../models/doctorModel'
 
 // Get all Appointments
 export const getAllAppointments = async (
@@ -19,8 +19,8 @@ export const getAllAppointments = async (
         }
 
         const data: IAppointment[] = await Appointment.find({})
-            .populate({ path: "patientId" })
-            .populate({ path: "doctorId" })
+            .populate({ path: 'patientId' })
+            .populate({ path: 'doctorId' })
             .sort(sort)
         response.status(200).send(data)
     } catch (error) {
@@ -36,8 +36,6 @@ export const getAppointmentById = async (
     // eslint-disable-next-line consistent-return
 ) => {
     try {
-
-
         const data: IAppointment | null = await Appointment.findOne({
             _id: request.params.id,
         })
@@ -60,15 +58,55 @@ export const createAppointment = async (
     next: NextFunction
 ) => {
     try {
+        // const doctorAppointments=Doctor.un
         const data: IAppointment = request.body
+        console.log(data)
+        // if(doctorAppointments.includes(request.body.date))
+        //  throw new Error('This Appointement is not avalilable')
+        await Doctor.updateOne(
+            {
+                _id: request.body.doctorId,
+            },
+            {
+                $addToSet: {
+                    ' unavailableAppointments': request.body.date,
+                },
+            }
+        )
+        // await Doctor.save()
         const object = await Appointment.create(data)
-
-        response.status(201).json(object)
+        const createdAppointment = await object.save()
+        response.status(201).json(createdAppointment)
     } catch (error) {
         next(error)
     }
 }
 
+export const addAppointmentToDoctor = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    try {
+        const data: IAppointment = request.body
+        console.log(data)
+        // await Doctor.updateOne(
+        //     {
+        //         _id: request.body.doctorId,
+        //     },
+        //     {
+        //         $addToSet: {
+        //             ' unavailableAppointments': request.body.date,
+        //         },
+        //     }
+        // )
+        const object = new Appointment(data)
+        await object.save()
+        response.status(201).json(object)
+    } catch (error) {
+        next(error)
+    }
+}
 // Update Appointment
 export const updateAppointment = async (
     request: Request,
@@ -110,19 +148,3 @@ export const deleteAppointmentById = async (
         next(error)
     }
 }
-
-// export const createAppointment = async (
-//     request: Request,
-//     response: Response,
-//     next: NextFunction
-// ) => {
-//     try {
-//         const data: IAppointment = request.body
-//         console.log(data)
-//         const object = await Appointment.create(data)
-
-//         response.status(201).json(object)
-//     } catch (error) {
-//         next(error)
-//     }
-// }
