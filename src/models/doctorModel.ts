@@ -36,6 +36,6 @@ const doctorSchema = new Schema<IDoctor>({
     },
 })
 
-const Doctor = model<IDoctor>('Doctor', doctorSchema)
+const Doctor = model<IDoctor>('doctors', doctorSchema)
 
 export { Doctor, IDoctor }

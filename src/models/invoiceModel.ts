@@ -9,12 +9,12 @@ interface IInvoice extends Document {
 const InvoiceSchema = new Schema<IInvoice>({
     doctorId: {
         type: Schema.Types.ObjectId,
-        ref: 'Doctor',
+        ref: 'doctors',
         required: true,
     },
     patientId: {
         type: Schema.Types.ObjectId,
-        ref: 'Patient',
+        ref: 'patients',
         required: true,
     },
     charge: {
@@ -23,6 +23,6 @@ const InvoiceSchema = new Schema<IInvoice>({
     },
 })
 
-const Invoice = model<IInvoice>('invoice', InvoiceSchema)
+const Invoice = model<IInvoice>('invoices', InvoiceSchema)
 
 export { Invoice, IInvoice }

@@ -64,7 +64,7 @@ const PatientSchema = new Schema<IPatient>({
             },
             invoiceId: {
                 type: Schema.Types.ObjectId,
-                ref: 'invoice',
+                ref: 'invoices',
                 required: true,
             },
             appointmentId: {
@@ -76,6 +76,6 @@ const PatientSchema = new Schema<IPatient>({
     ],
 })
 
-const Patient = model<IPatient>('Patient', PatientSchema)
+const Patient = model<IPatient>('patients', PatientSchema)
 
 export { Patient, IPatient }

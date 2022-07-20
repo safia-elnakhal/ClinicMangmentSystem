@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as medicineController from '../controllers/medicineController'
+
 import validationMW from '../middlewares/validationMW'
 
 const medicineRoute = Router()

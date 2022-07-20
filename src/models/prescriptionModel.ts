@@ -28,17 +28,17 @@ interface IPrescription extends Document {
 const PrescriptionSchema = new Schema<IPrescription>({
     doctorId: {
         type: Schema.Types.ObjectId,
-        ref: 'Doctor',
+        ref: 'doctors',
         required: true,
     },
     medicineId: {
         type: Schema.Types.ObjectId,
-        ref: 'medicine',
+        ref: 'medicines',
         required: true,
     },
     patientId: {
         type: Schema.Types.ObjectId,
-        ref: 'Patient',
+        ref: 'patients',
         required: true,
     },
     consultation: {
@@ -46,6 +46,6 @@ const PrescriptionSchema = new Schema<IPrescription>({
     },
 })
 
-const Prescription = model<IPrescription>('prescription', PrescriptionSchema)
+const Prescription = model<IPrescription>('prescriptions', PrescriptionSchema)
 
 export { Prescription, IPrescription }

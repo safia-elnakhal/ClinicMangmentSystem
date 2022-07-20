@@ -41,6 +41,6 @@ const MedicineSchema = new Schema<IMedicine>({
     },
 })
 
-const Medicine = model<IMedicine>('medicine', MedicineSchema)
+const Medicine = model<IMedicine>('medicines', MedicineSchema)
 
 export { Medicine, IMedicine }

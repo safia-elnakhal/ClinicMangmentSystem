@@ -19,7 +19,7 @@ enum role {
     admin = 'admin',
 }
 
-interface Iemployee {
+interface IEmployee {
     name: string
     email: string
     password: string
@@ -27,7 +27,7 @@ interface Iemployee {
     role?: role
 }
 
-const employeeSchema = new Schema<Iemployee>({
+const employeeSchema = new Schema<IEmployee>({
     name: {
         type: String,
         required: true,
@@ -43,4 +43,6 @@ const employeeSchema = new Schema<Iemployee>({
     role: { type: String, enum: Object.values(role) },
 })
 
-module.exports = model<Iemployee>('Employee', employeeSchema)
+const Employee = model<IEmployee>('employees', employeeSchema)
+
+export { Employee, IEmployee }
