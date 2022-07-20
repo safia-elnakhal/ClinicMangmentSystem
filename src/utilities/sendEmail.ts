@@ -6,6 +6,7 @@ require('dotenv').config()
 
 type EmailType =
     | 'invoice_creation'
+    | 'appointment_creation'
     | 'doctor_creation'
     | 'employee_creation'
     | 'patient_creation'
@@ -42,9 +43,18 @@ export default class EmailClient {
 
     private defineMessage(type: EmailType, userName: string) {
         switch (type) {
+            case 'appointment_creation':
+                this.message = {
+                    subject: 'New appointment is linked to you.',
+                    body: `<h1>Hi ${userName.split(' ')[0]},</h1>
+                <p>We like to inform you that a new appointment is linked to your account and you can access it from your profile.</p>
+                `,
+                }
+                break
+
             case 'invoice_creation':
                 this.message = {
-                    subject: 'New invoice is linked to your email.',
+                    subject: 'New invoice is linked to your account.',
                     body: `<h1>Hi ${userName.split(' ')[0]},</h1>
                 <p>We like to inform you that a new invoice is linked to your account and you can access it from your profile.</p>
                 `,
@@ -78,7 +88,6 @@ export default class EmailClient {
                 break
 
             case 'doctor_creation':
-                console.log('2addadwd')
                 this.message = {
                     subject: `Hola Dr. ${
                         userName.split(' ')[0]
