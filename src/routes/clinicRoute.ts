@@ -17,9 +17,35 @@ router
     .route('/clinic')
     .post(
         [
-            body('name')
-                .isAlpha('en-US', { ignore: '' })
-                .withMessage('Service Name Must Be Characters'),
+            body('clinicName')
+                .isAlpha('en-US', { ignore: 's' })
+                .withMessage('clinicName Must Be Characters'),
+            body('contactNumber')
+                .isMobilePhone('ar-EG')
+                .withMessage('contactNumber Must Be Valid Egypt Phone Number'),
+            body('address')
+                .optional({ checkFalsy: true, nullable: true })
+                .isObject()
+                .withMessage('address must contain city,street,building'),
+            body('address.city')
+                .optional({ checkFalsy: true, nullable: true })
+                .isString()
+                .withMessage('address must contain city of type string '),
+            body('address.streetName')
+                .optional({ checkFalsy: true, nullable: true })
+                .isString()
+                .withMessage('address must contain streetName of type string'),
+            body('address.buildingNumber')
+                .optional({ checkFalsy: true, nullable: true })
+                .isNumeric()
+                .withMessage(
+                    'address must contain buildingNumber of type number'
+                ),
+            body('employeeId')
+                .isArray()
+                .withMessage('employeeId Must Be Array ')
+                .isMongoId()
+                .withMessage('employeeId must be objectId'),
         ],
         validationMW,
         createClinic
