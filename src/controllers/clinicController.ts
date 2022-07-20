@@ -8,7 +8,7 @@ export const createClinic = async (
 ) => {
     try {
         const clinicProperties: IClinic = request.body
-        const clinicObject = await new Clinic(clinicProperties)
+        const clinicObject = new Clinic(clinicProperties)
         await clinicObject.save()
         response.status(201).json({ data: 'New Clinic Added' })
     } catch (error) {
@@ -23,6 +23,7 @@ export const getAllClinicData = async (
 ) => {
     try {
         const data: IClinic[] = await Clinic.find({}, { services: 0 })
+
         response.status(200).json({
             Clinic: data,
         })
@@ -39,6 +40,14 @@ export const getAllClinicServices = async (
 ) => {
     try {
         const data: IClinic[] = await Clinic.find({}, { services: 1 })
+            .populate({
+                path: 'doctorId',
+                select: { name: 1, email: 1, specialty: 1 },
+            })
+            .populate({
+                path: 'employeeId',
+                select: { name: 1, typeofEmployee: 1, role: 1 },
+            })
         response.status(200).json({
             ClinicServices: data,
         })
@@ -59,7 +68,10 @@ export const getClinicServiceById = async (
                 'services._id': request.params.id,
             },
             { services: 1 }
-        )
+        ).populate({
+            path: 'doctorId',
+            select: { name: 1, email: 1, specialty: 1 },
+        })
         console.log(request.params)
         console.log(data)
         if (data == null) next(new Error('Clinic Service Does not Exist'))
