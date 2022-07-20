@@ -10,7 +10,9 @@ export const getAllAppointments = async (
     next: NextFunction
 ) => {
     try {
-        const data: IAppointment[] = await Appointment.find({}).populate({ path: "patientId" }).populate({ path: "doctorId" })
+        const data: IAppointment[] = await Appointment.find({})
+            .populate({ path: 'patientId' })
+            .populate({ path: 'doctorId' })
         response.status(200).send(data)
     } catch (error) {
         next(error)
@@ -27,7 +29,9 @@ export const getAppointmentById = async (
     try {
         const data: IAppointment | null = await Appointment.findOne({
             _id: request.params.id,
-        }).populate({ path: "patientId" }).populate({ path: "doctorId" })
+        })
+            .populate({ path: 'patientId' })
+            .populate({ path: 'doctorId' })
 
         if (data) {
             return response.status(200).send(data)
