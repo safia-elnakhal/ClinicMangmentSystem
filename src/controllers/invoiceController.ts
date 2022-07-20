@@ -10,6 +10,15 @@ export const getAllInvoices = async (
 ) => {
     try {
         const data: IInvoice[] = await Invoice.find({})
+            .populate({
+                path: 'patientId',
+                select: { name: 1, email: 1 },
+            })
+            .populate({
+                path: 'doctorId',
+                select: { name: 1, email: 1 },
+            })
+
         res.status(200).send(data)
     } catch (error) {
         next(error)
@@ -25,6 +34,14 @@ export const getInvoiceById = async (
         const data: IInvoice | null = await Invoice.findOne({
             _id: req.params.id,
         })
+            .populate({
+                path: 'patientId',
+                select: { name: 1, email: 1 },
+            })
+            .populate({
+                path: 'doctorId',
+                select: { name: 1, email: 1 },
+            })
 
         if (data) {
             res.status(200).send(data)

@@ -14,7 +14,7 @@ const InvoiceSchema = new Schema<IInvoice>({
     },
     patientId: {
         type: Schema.Types.ObjectId,
-        ref: 'patients',
+        ref: 'Patient',
         required: true,
     },
     charge: {
