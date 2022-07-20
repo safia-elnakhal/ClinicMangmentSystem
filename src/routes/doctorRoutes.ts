@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import * as Controller from '../controllers/doctorController'
+import * as Controller from './../controllers/doctorcontroller'
 import validationMW from '../middlewares/validationMW'
 
 const { body, param } = require('express-validator')
