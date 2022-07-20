@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import * as patientController from '../controllers/patientController'
 import validationMW from '../middlewares/validationMW'
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 
 const { body, param } = require('express-validator')
 
@@ -8,8 +9,10 @@ const patientRoute = Router()
 
 patientRoute
     .route('/patients')
-    .get(patientController.getAllPatients)
+    .get(authMW, adminAndOwner, patientController.getAllPatients)
     .post(
+        authMW,
+        adminOnly,
         [
             body('name').isAlpha().withMessage('patient name should be string'),
             body('email')
@@ -36,17 +39,23 @@ patientRoute
 patientRoute
     .route('/patients/:id')
     .delete(
+        authMW,
+        adminAndOwner,
         [param('id').isMongoId().withMessage('patient id should be objectId')],
         validationMW,
         patientController.deletePatientById
     )
 
     .get(
+        authMW,
+        adminAndOwner,
         [param('id').isMongoId().withMessage('patient id should be objectId')],
         validationMW,
         patientController.getPatientsById
     )
     .put(
+        authMW,
+        adminAndOwner,
         [
             body('name').isAlpha().withMessage('patient name should be string'),
             body('email')
@@ -71,6 +80,8 @@ patientRoute
     )
 
 patientRoute.route('/patients/:id/report').get(
+    authMW,
+    adminAndOwner,
     [param('id').isMongoId().withMessage('patient id should be objectId')],
     validationMW,
 

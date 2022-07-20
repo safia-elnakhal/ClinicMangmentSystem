@@ -2,13 +2,16 @@ import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as invoiceController from '../controllers/invoiceController'
 import validationMW from '../middlewares/validationMW'
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 
 const invoiceRoute = Router()
 
 invoiceRoute
     .route('/invoices')
-    .get(invoiceController.getAllInvoices)
+    .get(authMW, adminOnly, invoiceController.getAllInvoices)
     .post(
+        authMW,
+        adminOnly,
         [
             body('doctorId')
                 .exists()
@@ -33,6 +36,8 @@ invoiceRoute
 invoiceRoute
     .route('/invoices/:id')
     .get(
+        authMW,
+        adminAndOwner,
         [
             param('id')
                 .exists()
@@ -44,6 +49,8 @@ invoiceRoute
         invoiceController.getInvoiceById
     )
     .put(
+        authMW,
+        adminOnly,
         [
             param('id')
                 .exists()
@@ -67,6 +74,8 @@ invoiceRoute
         invoiceController.updateInvoice
     )
     .delete(
+        authMW,
+        adminOnly,
         [
             param('id')
                 .exists()

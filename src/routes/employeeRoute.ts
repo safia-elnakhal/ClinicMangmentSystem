@@ -1,36 +1,17 @@
-import { Response, NextFunction, Router } from 'express'
+import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as Controller from '../controllers/employeeController'
 import validationMW from '../middlewares/validationMW'
-import authMW from '../middlewares/authMW'
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 
 const routes = Router()
 
 routes
     .route('/employees')
-    .get(
-        authMW,
-        (request: any, response: Response, next: NextFunction) => {
-            if (request.role === 'admin') next()
-            else if (request.id === request.params.id) next()
-            else {
-                const error: any = new Error('Not authorized')
-                error.status = 403
-                next(error)
-            }
-        },
-        Controller.getAllEmployees
-    )
+    .get(authMW, adminOnly, Controller.getAllEmployees)
     .post(
         authMW,
-        (request: any, response: Response, next: NextFunction) => {
-            if (request.role === 'admin') next()
-            else {
-                const error: any = new Error('Not authorized')
-                error.status = 403
-                next(error)
-            }
-        },
+        adminOnly,
         [
             body('name')
                 .isAlpha('en-US', { ignore: ' ' })
@@ -53,14 +34,7 @@ routes
     )
     .put(
         authMW,
-        (request: any, response: Response, next: NextFunction) => {
-            if (request.role === 'admin') next()
-            else {
-                const error: any = new Error('Not authorized')
-                error.status = 403
-                next(error)
-            }
-        },
+        adminOnly,
         [
             body('name')
                 .isAlpha('en-US', { ignore: '' })
@@ -82,39 +56,18 @@ routes
         Controller.updateEmployee
     )
 
-// user can access only his data
-// '/employees/32323232323'
-// - admin
-// - 32323232323
-// - sdsdsd false
-
 routes
     .route('/employees/:id')
     .get(
         [param('id').isMongoId().withMessage('employee id should be objectId')],
         authMW,
-        (request: any, response: Response, next: NextFunction) => {
-            if (request.role === 'admin') next()
-            else if (request.id === request.params.id) next()
-            else {
-                const error: any = new Error('Not authorized')
-                error.status = 403
-                next(error)
-            }
-        },
+        adminAndOwner,
         validationMW,
         Controller.getEmployeeByID
     )
     .delete(
         authMW,
-        (request: any, response: Response, next: NextFunction) => {
-            if (request.role === 'admin') next()
-            else {
-                const error: any = new Error('Not authorized')
-                error.status = 403
-                next(error)
-            }
-        },
+        adminOnly,
         [param('id').isMongoId().withMessage('employee id should be objectId')],
         validationMW,
         Controller.deleteEmployee

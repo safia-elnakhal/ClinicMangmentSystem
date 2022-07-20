@@ -2,13 +2,16 @@ import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as appointmentController from '../controllers/appointmentController'
 import validationMW from '../middlewares/validationMW'
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 
 const appointmentRoute = Router()
 
 appointmentRoute
     .route('/appointments')
-    .get(appointmentController.getAllAppointments)
+    .get(authMW, adminOnly, appointmentController.getAllAppointments)
     .post(
+        authMW,
+        adminOnly,
         [
             param('doctorId')
                 .exists()
@@ -33,6 +36,8 @@ appointmentRoute
         appointmentController.getAppointmentById
     )
     .put(
+        authMW,
+        adminOnly,
         [
             param('doctorId')
                 .exists()
@@ -60,6 +65,8 @@ appointmentRoute
 appointmentRoute
     .route('/appointments/:id')
     .get(
+        authMW,
+        adminAndOwner,
         [
             param('id')
                 .exists()
@@ -71,6 +78,8 @@ appointmentRoute
         appointmentController.updateAppointment
     )
     .delete(
+        authMW,
+        adminAndOwner,
         [
             param('id')
                 .exists()
