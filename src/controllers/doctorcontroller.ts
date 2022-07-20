@@ -11,7 +11,34 @@ export const getAllDoctor = async (
     next: NextFunction
 ) => {
     try {
-        const data: IDoctor[] = await Doctor.find({})
+        let sortType = req.query.sorting
+        let filterGender = req.query.gender
+        let filtermaxAge = req.query.maxAge
+        let filterminAge = req.query.minAge
+        let filterSpecialty = req.query.specialty
+
+        let query: {} = {}
+        let sort: {} = {}
+        if (sortType === 'nameAZ') {
+            sort = { name: 1 }
+        } else if (sortType === 'nameZA') {
+            sort = { name: -1 }
+        } else if (sortType === 'ageAsc') {
+            sort = { age: 1 }
+        } else if (sortType === 'ageDsc') {
+            sort = { age: -1 }
+        } else if (filterGender) {
+            query = { gender: filterGender }
+        } else if (filtermaxAge) {
+            query = { age: { $lte: filtermaxAge } }
+        } else if (filterminAge) {
+            query = { age: { $gte: filterminAge } }
+        } else if (filterSpecialty) {
+            query = { specialty: filterSpecialty }
+
+        }
+
+        const data: IDoctor[] = await Doctor.find(query).sort(sort)
         res.status(200).send(data)
     } catch (error) {
         next(error)
