@@ -68,8 +68,6 @@ export const getAllPatients = async (
 
 }
 
-
-
 // // Get All patient
 // export const getAllPatients = (request: Request, response: Response, next: NextFunction) => {
 //     Patient.find({})
@@ -92,6 +90,33 @@ export const getPatientsById = async (
         const data: IPatient | null = await Patient.findOne({
             _id: request.params.id,
         })
+            .populate({ path: 'reports.doctorId' })
+            .populate({ path: 'reports.appointmentId' })
+            .populate({ path: 'reports.invoiceId' })
+
+        if (data) {
+            return response.status(200).send(data)
+        }
+        next(new Error(' patient not found'))
+    } catch (error) {
+        next(error)
+    }
+}
+
+
+
+
+
+export const getReportbyPatientId = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+    // eslint-disable-next-line consistent-return
+) => {
+    try {
+        const data: IPatient | null = await Patient.findOne({
+            _id: request.params.id,
+        }, { reports: 1 })
             .populate({ path: 'reports.doctorId' })
             .populate({ path: 'reports.appointmentId' })
             .populate({ path: 'reports.invoiceId' })
