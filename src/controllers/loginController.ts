@@ -25,7 +25,7 @@ export const loginPatient = async (
     try {
         const data = await Patient.findOne({
             email: request.body.email,
-            password: request.body.password,
+            // password: request.body.password,
         })
         if (!data) {
             const error: any = new Error('email or password incorrect')
@@ -58,7 +58,7 @@ export const loginDoctor = async (
     try {
         const data = await Doctor.findOne({
             email: request.body.email,
-            password: request.body.password,
+            // password: request.body.password,
         })
         console.log(data)
         if (!data) {
@@ -94,7 +94,7 @@ export const loginEmployee = async (
         const data = await Employee.findOne(
             {
                 email: request.body.email,
-               // password: request.body.password,
+                // password: request.body.password,
                 // role: request.body.role,
             },
             { role: 1 }
