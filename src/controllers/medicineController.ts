@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express'
 import convertString from '../utilities/convertString'
 import { Medicine, IMedicine } from '../models/medicineModel'
 
+// Get all Medicine
 export const getAllMedicines = async (
     req: Request,
     res: Response,
@@ -16,6 +17,7 @@ export const getAllMedicines = async (
     }
 }
 
+// Get  Medicine by ID
 export const getMedicineById = async (
     req: Request,
     res: Response,
@@ -34,13 +36,14 @@ export const getMedicineById = async (
     }
 }
 
+// Create Medicine
 export const createMedicine = async (
-    req: Request,
+    request: Request,
     res: Response,
     next: NextFunction
 ) => {
     try {
-        const medicineObject = new Medicine({ ...req.body })
+        const medicineObject = new Medicine({ ...request.body })
         const data = await medicineObject.save()
         res.status(201).json(data)
     } catch (error) {
@@ -48,15 +51,16 @@ export const createMedicine = async (
     }
 }
 
+// Update Appointment
 export const updateMedicine = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
         const data = await Medicine.updateOne(
-            { _id: convertString.toObjectId(req.params.id) },
-            { $set: req.body }
+            { _id: convertString.toObjectId(request.params.id) },
+            { $set: request.body }
         )
         console.log(data)
 
@@ -66,12 +70,13 @@ export const updateMedicine = async (
         if (data.modifiedCount < 1)
             throw new Error('no update happened to medicine')
 
-        res.status(200).json({ message: 'modified medicine' })
+        response.status(200).json({ message: 'modified medicine' })
     } catch (error) {
         next(error)
     }
 }
 
+// delete Medicine BY ID
 export const deleteMedicineById = async (
     req: Request,
     res: Response,

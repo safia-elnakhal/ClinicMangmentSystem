@@ -1,7 +1,6 @@
-// import mongoose from 'mongoose'
-
 import { Request, Response, NextFunction } from 'express'
 
+import convertString from '../utilities/convertString'
 import { Appointment, IAppointment } from '../models/appointmentModel'
 
 // Get all Appointments
@@ -63,14 +62,17 @@ export const updateAppointment = async (
     next: NextFunction
 ) => {
     try {
-        const data: IAppointment | null = await Appointment.findOneAndUpdate(
-            { _id: request.body.id },
+        const data = await Appointment.updateOne(
+            { _id: convertString.toObjectId(request.body.id) },
             { $set: request.body }
         )
 
-        if (!data) {
-            throw new Error('Appointment not found')
+        if (!data.acknowledged) {
+            throw new Error('entered data not follow schema')
         }
+        if (data.matchedCount < 1) throw new Error('Appointment not found')
+        if (data.modifiedCount < 1)
+            throw new Error('no update happened to Appointment')
 
         response.status(200).json({ message: 'Appointment updated' })
     } catch (error) {
@@ -78,6 +80,7 @@ export const updateAppointment = async (
     }
 }
 
+// delete Appointment BY ID
 export const deleteAppointmentById = async (
     request: Request,
     response: Response,
