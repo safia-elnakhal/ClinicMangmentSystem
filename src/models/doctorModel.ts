@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, Types } from 'mongoose'
 
 interface IDoctor {
     name: string
@@ -7,6 +7,7 @@ interface IDoctor {
     email: string
     password: string
     specialty: string
+    unavailableAppointments: Types.Array<Date>
 }
 
 const doctorSchema = new Schema<IDoctor>({
@@ -33,6 +34,9 @@ const doctorSchema = new Schema<IDoctor>({
     },
     specialty: {
         type: String,
+    },
+    unavailableAppointments: {
+        type: [Date],
     },
 })
 
