@@ -3,6 +3,19 @@ import bcrypt from 'bcrypt'
 import convertString from '../utilities/convertString'
 import { Employee, IEmployee } from '../models/employeeModel'
 
+import EmailClient from '../utilities/sendEmail'
+
+const emailNotifier = new EmailClient()
+async function notifyUser(userInfo: any): Promise<boolean> {
+    const msgState = await emailNotifier.sendMessage(
+        'employee_creation',
+        userInfo.name,
+        userInfo.email
+    )
+
+    return msgState
+}
+
 const saltRounds = 10
 
 // Get All Employees
@@ -83,7 +96,10 @@ export const createEmployee = async (
             role: request.body.role,
         })
         const data = await object.save()
-        response.status(201).json(data)
+
+        const isEmailSentToUser = await notifyUser(data)
+
+        response.status(201).json({ createdEmployee: data, isEmailSentToUser })
     } catch (error) {
         next(error)
     }

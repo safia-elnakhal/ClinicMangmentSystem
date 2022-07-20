@@ -5,15 +5,15 @@ import { Patient, IPatient } from '../models/patientModel'
 
 import EmailClient from '../utilities/sendEmail'
 
-const invoiceEmailNotifier = new EmailClient()
-async function notifyUser(patientInfo: any): Promise<boolean> {
-    const patientMsgState = await invoiceEmailNotifier.sendMessage(
-        'user_creation',
-        patientInfo.name,
-        patientInfo.email
+const emailNotifier = new EmailClient()
+async function notifyUser(userInfo: any): Promise<boolean> {
+    const msgState = await emailNotifier.sendMessage(
+        'patient_creation',
+        userInfo.name,
+        userInfo.email
     )
 
-    return patientMsgState
+    return msgState
 }
 
 // Get All patient
@@ -55,7 +55,6 @@ export const getAllPatients = async (
             filter = { age: { $gte: filterminAge } }
         }
 
-
         const data: IPatient[] = await Patient.find(filter)
             .populate({ path: 'reports.doctorId' })
             .populate({ path: 'reports.appointmentId' })
@@ -65,10 +64,7 @@ export const getAllPatients = async (
     } catch (error) {
         next(error)
     }
-
 }
-
-
 
 // // Get All patient
 // export const getAllPatients = (request: Request, response: Response, next: NextFunction) => {

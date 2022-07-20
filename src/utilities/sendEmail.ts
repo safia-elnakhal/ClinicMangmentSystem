@@ -4,6 +4,12 @@ import * as SMTPTransport from 'nodemailer/lib/smtp-transport'
 
 require('dotenv').config()
 
+type EmailType =
+    | 'invoice_creation'
+    | 'doctor_creation'
+    | 'employee_creation'
+    | 'patient_creation'
+
 export default class EmailClient {
     private account!: { name: string; email: string }
 
@@ -34,9 +40,9 @@ export default class EmailClient {
         }
     }
 
-    private defineMessage(type: 'invoice' | 'user_creation', userName: string) {
+    private defineMessage(type: EmailType, userName: string) {
         switch (type) {
-            case 'invoice':
+            case 'invoice_creation':
                 this.message = {
                     subject: 'New invoice is linked to your email.',
                     body: `<h1>Hi ${userName.split(' ')[0]},</h1>
@@ -44,16 +50,47 @@ export default class EmailClient {
                 `,
                 }
                 break
-            case 'user_creation':
+
+            case 'patient_creation':
                 this.message = {
                     subject: `Hola ${
                         userName.split(' ')[0]
-                    }, welcome on board ^^`,
+                    }, welcome in our clinic ^^`,
                     body: `
                     <p>It's a message from Eng. Emam El-Emam, general manager of the clinics and I want to graduate you for visiting us 🎉.</p>
                     <p>We would like for you to be always sick so we can see you, hahaha I'm joking.</p>
                     <p>Emam El-Emam</p>
                     `,
+                }
+                break
+
+            case 'employee_creation':
+                this.message = {
+                    subject: `Hola ${
+                        userName.split(' ')[0]
+                    }, welcome on board ^^`,
+                    body: `
+                    <h1>Hi ${userName.split(' ')[0]}, it's a great news.</h1>
+                        <p>I'm Eng. Emam El-Emam, general manager of the clinics and I want to graduate you for being one of the team 🎉.</p>
+                        <p>Emam El-Emam</p>
+                        `,
+                }
+                break
+
+            case 'doctor_creation':
+                console.log('2addadwd')
+                this.message = {
+                    subject: `Hola Dr. ${
+                        userName.split(' ')[0]
+                    }, welcome on board ^^`,
+                    body: `
+                        <h1>Hi Dr. ${
+                            userName.split(' ')[0]
+                        }, it's a great news.</h1>
+                            <p>I'm Eng. Emam El-Emam, general manager of the clinics and I want to graduate you for being one of the team 🎉.</p>
+                            <p>We look forward to treat all of our patients asap.</p>
+                            <p>Emam El-Emam</p>
+                            `,
                 }
                 break
 
@@ -63,7 +100,7 @@ export default class EmailClient {
     }
 
     async sendMessage(
-        type: 'invoice' | 'user_creation',
+        type: EmailType,
         userName: string,
         userEmail: string
     ): Promise<boolean> {
@@ -75,6 +112,8 @@ export default class EmailClient {
             subject: this.message.subject,
             html: this.message.body,
         })
+
+        console.log(sendingInfo)
 
         return (
             sendingInfo.accepted.length === 1 &&
