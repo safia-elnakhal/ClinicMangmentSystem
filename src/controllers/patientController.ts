@@ -13,7 +13,7 @@ export const getAllPatients = async (
     next: NextFunction
 ) => {
     try {
-        const data: IPatient[] = await Patient.find({})
+        const data: IPatient[] = await Patient.find({}).populate({ path: 'reports.doctorId' }).populate({ path: 'reports.appointmentId' }).populate({ path: 'reports.invoiceId' })
         res.status(200).send(data)
     } catch (error) {
         next(error)
@@ -41,7 +41,7 @@ export const getPatientsById = async (
     try {
         const data: IPatient | null = await Patient.findOne({
             _id: req.params.id,
-        })
+        }).populate({ path: 'doctors' }).populate({ path: 'appointments' }).populate({ path: 'invoice' })
 
         if (data) {
             return res.status(200).send(data)
