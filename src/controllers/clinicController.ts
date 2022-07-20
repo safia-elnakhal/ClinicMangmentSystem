@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
+
 import { Clinic, IClinic } from '../models/clinicModel'
 
+// create Clinic
 export const createClinic = async (
     request: Request,
     response: Response,
@@ -15,7 +17,7 @@ export const createClinic = async (
         next(error)
     }
 }
-// Get Clinic Data
+// Get all Clinic
 export const getAllClinicData = async (
     request: Request,
     response: Response,
