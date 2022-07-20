@@ -1,83 +1,120 @@
 import { Request, Response, NextFunction } from 'express'
-import ClinicService from '../models/clinicModel'
+import { Clinic, IClinic } from '../models/clinicModel'
 
-const getAllClinicServices = (
+export const createClinic = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    ClinicService.find()
-        .then((data) => {
-            response.status(200).json({
-                Services: data,
-            })
+    try {
+        const clinicProperties: IClinic = request.body
+        const clinicObject = await new Clinic(clinicProperties)
+        await clinicObject.save()
+        response.status(201).json({ data: 'New Clinic Added' })
+    } catch (error) {
+        next(error)
+    }
+}
+// Get Clinic Data
+export const getAllClinicData = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    try {
+        const data: IClinic[] = await Clinic.find({}, { services: 0 })
+        response.status(200).json({
+            Clinic: data,
         })
-        .catch((error) => next(error))
+    } catch (error) {
+        next(error)
+    }
 }
 
-const createClinicService = (
+//  Get All Clinic Services
+export const getAllClinicServices = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    const clinicServiceObject = new ClinicService(request.body)
-    clinicServiceObject
-        .save()
-        .then(() => {
-            response.status(201).json({ data: 'New Clinic Service Added' })
+    try {
+        const data: IClinic[] = await Clinic.find({}, { services: 1 })
+        response.status(200).json({
+            ClinicServices: data,
         })
-        .catch((error) => next(error))
+    } catch (error) {
+        next(error)
+    }
+}
+
+//  Get Specific Clinic Service  //!Check it again (find by name)
+export const getClinicServiceById = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    try {
+        const data: IClinic | null = await Clinic.findOne(
+            {
+                'services._id': request.params.id,
+            },
+            { services: 1 }
+        )
+        console.log(request.params)
+        console.log(data)
+        if (data == null) next(new Error('Clinic Service Does not Exist'))
+        else {
+            response.status(200).json(data)
+        }
+    } catch (error) {
+        next(error)
+    }
 }
 
 // Update Clinic Services (adding new services)
-const updateClinicServices = (
+export const updateClinicServices = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    ClinicService.updateOne(
-        { _id: request.body.id },
-        {
-            $addToSet: {
-                services: { $each: request.body.services },
-            },
-        }
-    )
-        .then((data) => {
-            if (data.matchedCount === 0) next(new Error('Clinic Not Found'))
-            else {
-                response.status(200).json('Clinic Services Has Been Added')
+    try {
+        const data = await Clinic.updateOne(
+            { _id: request.body.id },
+            {
+                $addToSet: {
+                    services: request.body.services,
+                },
             }
-        })
-        .catch((error) => next(error))
+        )
+        if (data.matchedCount === 0) next(new Error('Clinic Not Found'))
+        else {
+            response.status(200).json('Clinic Services Has Been Added')
+        }
+    } catch (error) {
+        next(error)
+    }
 }
 
-// Update Clinic Services (adding new services)
-const deleteClinicServices = (
+// Update Clinic Services(deleteService)
+export const deleteClinicServices = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    ClinicService.updateOne(
-        { _id: request.body.id },
-        {
-            $pull: {
-                services: request.body.services,
-            },
-        }
-    )
-        .then((data) => {
-            if (data.matchedCount === 0) next(new Error('Clinic Not Found'))
-            else {
-                response.status(200).json('Clinic Services Has Been deleted')
+    try {
+        const data = await Clinic.updateOne(
+            { _id: request.body.id },
+            {
+                $pull: {
+                    services: request.body.services,
+                },
             }
-        })
-        .catch((error) => next(error))
-}
-
-export = {
-    createClinicService,
-    getAllClinicServices,
-    updateClinicServices,
-    deleteClinicServices,
+        )
+        if (data.matchedCount === 0) next(new Error('Clinic Not Found'))
+        else {
+            response.status(200).json('Clinic Services Has Been deleted')
+        }
+    } catch (error) {
+        next(error)
+    }
 }
