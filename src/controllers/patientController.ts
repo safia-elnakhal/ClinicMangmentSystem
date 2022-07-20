@@ -32,10 +32,10 @@ export const getAllPatients = async (
         // http://localhost:8080/patients?maxAge=30
         // http://localhost:8080/patients?minAge=30
 
-        let sortType = request.query.sorting
-        let filterGender = request.query.gender
-        let filtermaxAge = request.query.maxAge
-        let filterminAge = request.query.minAge
+        const sortType = request.query.sorting
+        const filterGender = request.query.gender
+        const filtermaxAge = request.query.maxAge
+        const filterminAge = request.query.minAge
 
         let filter: {} = {}
         let sort: {} = {}
@@ -55,7 +55,6 @@ export const getAllPatients = async (
             filter = { age: { $gte: filterminAge } }
         }
 
-
         const data: IPatient[] = await Patient.find(filter)
             .populate({ path: 'reports.doctorId' })
             .populate({ path: 'reports.appointmentId' })
@@ -65,10 +64,7 @@ export const getAllPatients = async (
     } catch (error) {
         next(error)
     }
-
 }
-
-
 
 // // Get All patient
 // export const getAllPatients = (request: Request, response: Response, next: NextFunction) => {
