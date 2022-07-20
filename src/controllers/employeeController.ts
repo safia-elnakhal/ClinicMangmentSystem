@@ -1,8 +1,14 @@
-import { ObjectID } from 'bson'
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-param-reassign */
+/* eslint-disable guard-for-in */
+/* eslint-disable no-unused-vars */
+import mongoose from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
+import bcrypt from 'bcrypt'
 
-const mongoose = require('mongoose')
-require('../models/employee')
+require('../models/employeeModel')
+
+const saltRounds = 10
 
 const Employee = mongoose.model('Employee')
 
@@ -13,7 +19,7 @@ export const getAllEmployees = (
     next: NextFunction
 ) => {
     Employee.find({})
-        .then((data: String) => {
+        .then((data: any) => {
             response.status(200).json(data)
         })
         .catch((error: Error) => {
@@ -28,7 +34,7 @@ export const getEmployeeByID = (
     next: NextFunction
 ) => {
     Employee.findOne({ _id: request.params.id })
-        .then((data: string) => {
+        .then((data: any) => {
             if (data == null) next(new Error(' Employee not found'))
             response.status(200).json(data)
         })
@@ -47,11 +53,13 @@ export const createEmployee = (
         name: request.body.name,
         age: request.body.age,
         email: request.body.email,
-        password: request.body.password,
+        password: bcrypt.hashSync(request.body.password, saltRounds),
+        typeofEmployee: request.body.typeofEmployee,
+        role: request.body.role,
     })
     object
         .save()
-        .then((data: String) => {
+        .then((data: any) => {
             response.status(201).json({ data: 'added' })
         })
         .catch((error: Error) => next(error))
@@ -65,7 +73,7 @@ export const updateEmployee = (
 ) => {
     // console.log(request.body.id);
     Employee.findById(request.body.id)
-        .then((data: { [x: string]: any; save: () => void }) => {
+        .then((data: any) => {
             for (const key in request.body) {
                 data[key] = request.body[key]
             }
@@ -84,7 +92,7 @@ export const deleteEmployee = (
     next: NextFunction
 ) => {
     Employee.deleteOne({ _id: request.params.id })
-        .then((data: ObjectID) => {
+        .then((data: any) => {
             if (!data) {
                 next(new Error(' Employee not found'))
             } else {
