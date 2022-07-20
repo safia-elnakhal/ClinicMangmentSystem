@@ -1,4 +1,4 @@
-import { Schema, Types, model } from 'mongoose'
+import { Schema, Types, model, Document } from 'mongoose'
 
 // eslint-disable-next-line no-unused-vars, no-shadow
 enum Gender {
@@ -8,14 +8,14 @@ enum Gender {
     female = 'female',
 }
 
-interface Reports {
+interface Reports extends Document {
     _id?: Types.ObjectId
     doctorId?: Types.ObjectId
     invoiceId?: Types.ObjectId
     appointmentId?: Types.ObjectId
 }
 
-interface IPatient {
+interface IPatient extends Document {
     email: string
     name: string
     password: string
@@ -59,7 +59,7 @@ const PatientSchema = new Schema<IPatient>({
         {
             doctorId: {
                 type: Schema.Types.ObjectId,
-                ref: 'doctors',
+                ref: 'Doctor',
                 required: true,
             },
             invoiceId: {
