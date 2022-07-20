@@ -1,15 +1,17 @@
 import { Router } from 'express'
-import * as Controller from './../controllers/doctorcontroller'
+import { body, param } from 'express-validator'
+import * as Controller from '../controllers/doctorcontroller'
 import validationMW from '../middlewares/validationMW'
-
-const { body, param } = require('express-validator')
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 
 const routes = Router()
 
 routes
     .route('/doctors')
-    .get(Controller.getAllDoctor)
+    .get(authMW, adminOnly, Controller.getAllDoctor)
     .post(
+        authMW,
+        adminOnly,
         [
             body('name')
                 .exists()
@@ -29,11 +31,15 @@ routes
 routes
     .route('/doctors/:id')
     .get(
+        authMW,
+        adminAndOwner,
         [param('id').isMongoId().withMessage('Doctor id should be objectId')],
         validationMW,
         Controller.getDoctorByID
     )
     .put(
+        authMW,
+        adminOnly,
         [
             body('name')
                 .exists()
@@ -54,6 +60,8 @@ routes
         Controller.updateDoctor
     )
     .delete(
+        authMW,
+        adminOnly,
         [param('id').isMongoId().withMessage('Doctor id should be objectId')],
         validationMW,
         Controller.deleteDoctor

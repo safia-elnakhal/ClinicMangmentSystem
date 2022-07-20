@@ -2,13 +2,16 @@ import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as appointmentController from '../controllers/appointmentController'
 import validationMW from '../middlewares/validationMW'
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 
 const appointmentRoute = Router()
 
 appointmentRoute
     .route('/appointments')
-    .get(appointmentController.getAllAppointments)
+    .get(authMW, adminOnly, appointmentController.getAllAppointments)
     .post(
+        authMW,
+        adminOnly,
         [
             body('doctorId')
                 .exists()
@@ -22,7 +25,33 @@ appointmentRoute
                 .withMessage('appointments id should be objectId'),
             body('reasonOfVisit')
                 .optional()
-                .isAlphanumeric('en-US', { ignore: 's' })
+                .isAlphanumeric('en-US', { ignore: ' ' })
+                .withMessage('appointments reasonOfVisit must be an alpha'),
+            body('date')
+                .optional()
+                .isDate()
+                .withMessage('appointments expirationDate must be a date'),
+        ],
+        validationMW,
+        appointmentController.getAppointmentById
+    )
+    .put(
+        authMW,
+        adminOnly,
+        [
+            param('doctorId')
+                .exists()
+                .withMessage('appointments id is required')
+                .isMongoId()
+                .withMessage('appointments id should be objectId'),
+            param('patientId')
+                .exists()
+                .withMessage('appointments id is required')
+                .isMongoId()
+                .withMessage('appointments id should be objectId'),
+            body('reasonOfVisit')
+                .optional()
+                .isAlphanumeric('en-US', { ignore: ' ' })
                 .withMessage('appointments reasonOfVisit must be an alpha'),
             body('date')
                 .optional()
@@ -60,6 +89,8 @@ appointmentRoute
 appointmentRoute
     .route('/appointments/:id')
     .get(
+        authMW,
+        adminAndOwner,
         [
             param('id')
                 .exists()
@@ -71,6 +102,8 @@ appointmentRoute
         appointmentController.getAppointmentById
     )
     .delete(
+        authMW,
+        adminAndOwner,
         [
             param('id')
                 .exists()

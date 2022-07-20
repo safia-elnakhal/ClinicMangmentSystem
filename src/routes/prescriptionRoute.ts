@@ -2,13 +2,16 @@ import { Router } from 'express'
 import { body, param } from 'express-validator'
 import * as prescriptionController from '../controllers/prescriptionController'
 import validationMW from '../middlewares/validationMW'
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 
 const prescriptionRoute = Router()
 
 prescriptionRoute
     .route('/prescriptions')
-    .get(prescriptionController.getAllPrescriptions)
+    .get(authMW, adminOnly, prescriptionController.getAllPrescriptions)
     .post(
+        authMW,
+        adminOnly,
         [
             body('doctorId')
                 .exists()
@@ -37,6 +40,8 @@ prescriptionRoute
 prescriptionRoute
     .route('/prescriptions/:id')
     .get(
+        authMW,
+        adminAndOwner,
         [
             param('id')
                 .exists()
@@ -48,6 +53,8 @@ prescriptionRoute
         prescriptionController.getPrescriptionById
     )
     .put(
+        authMW,
+        adminOnly,
         [
             param('id')
                 .exists()
@@ -75,6 +82,8 @@ prescriptionRoute
         prescriptionController.updatePrescription
     )
     .delete(
+        authMW,
+        adminOnly,
         [
             param('id')
                 .exists()

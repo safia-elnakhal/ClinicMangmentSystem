@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
-
+import authMW, { adminAndOwner, adminOnly } from '../middlewares/authMW'
 import * as clinicController from '../controllers/clinicController'
 import validationMW from '../middlewares/validationMW'
 
@@ -9,6 +9,8 @@ const router = Router()
 router
     .route('/clinics')
     .post(
+        authMW,
+        adminOnly,
         [
             body('clinicName')
                 .isAlpha('en-US', { ignore: 's' })
@@ -43,12 +45,14 @@ router
         validationMW,
         clinicController.createClinic
     )
-    .get(clinicController.getAllClinicData)
+    .get(authMW, adminAndOwner, clinicController.getAllClinicData)
 
 router
     .route('/clinics/services')
-    .get(clinicController.getAllClinicServices)
+    .get(authMW, adminAndOwner, clinicController.getAllClinicServices)
     .put(
+        authMW,
+        adminOnly,
         [
             body('services.name') //! adding unique
                 // .isEmpty()
@@ -65,8 +69,13 @@ router
         validationMW,
         clinicController.updateClinicServices
     )
-    .delete(clinicController.deleteClinicServices)
+    .delete(authMW, adminOnly, clinicController.deleteClinicServices)
 
-router.get('/clinic/services/:id', clinicController.getClinicServiceById)
+router.get(
+    '/clinic/services/:id',
+    authMW,
+    adminAndOwner,
+    clinicController.getClinicServiceById
+)
 
 export default router
