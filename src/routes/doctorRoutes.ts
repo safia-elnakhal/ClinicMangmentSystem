@@ -11,7 +11,11 @@ routes
     .get(Controller.getAllDoctor)
     .post(
         [
-            body('name').isAlpha().withMessage('Doctor name should be string'),
+            body('name')
+                .exists()
+                .withMessage('specialty name is required')
+                .isAlphanumeric('en-US', { ignore: ' ' })
+                .withMessage('specialty name must be an alpha'),
             body('email').isEmail().withMessage('Doctor Email should be Email'),
             body('age').isNumeric().withMessage('Doctor age should be Email'),
             body('password')
@@ -31,12 +35,20 @@ routes
     )
     .put(
         [
-            body('name').isAlpha().withMessage('Doctor name should be string'),
+            body('name')
+                .exists()
+                .withMessage('Doctor name is required')
+                .isAlphanumeric('en-US', { ignore: ' ' })
+                .withMessage('Doctor name must be an alpha'),
             body('email').isEmail().withMessage('Doctor Email should be Email'),
             body('password')
                 .isLength({ min: 6 })
                 .withMessage('Doctor password should be more than 6 numbers'),
             body('age').isNumeric().withMessage('Doctor age should be Email'),
+            body('specialty')
+                .optional()
+                .isAlphanumeric('en-US', { ignore: ' ' })
+                .withMessage('Doctor specialty must be an alpha'),
         ],
         validationMW,
         Controller.updateDoctor
