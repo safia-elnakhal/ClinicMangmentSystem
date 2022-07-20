@@ -4,21 +4,50 @@ import convertString from '../utilities/convertString'
 import { Patient, IPatient } from '../models/patientModel'
 
 // Get All patient
+
 export const getAllPatients = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
     try {
-        const data: IPatient[] = await Patient.find({})
+        let sortType = request.query.sorting
+        let filterGender = request.query.gender
+        let filtermaxAge = request.query.maxAge
+        let filterminAge = request.query.minAge
+
+        let query: {} = {}
+        let sort: {} = {}
+        if (sortType === 'nameAZ') {
+            sort = { name: 1 }
+        } else if (sortType === 'nameZA') {
+            sort = { name: -1 }
+        } else if (sortType === 'ageAsc') {
+            sort = { age: 1 }
+        } else if (sortType === 'ageDsc') {
+            sort = { age: -1 }
+        } else if (filterGender) {
+            query = { gender: filterGender }
+        } else if (filtermaxAge) {
+            query = { age: { $lte: filtermaxAge } }
+        } else if (filterminAge) {
+            query = { age: { $gte: filterminAge } }
+        }
+
+
+        const data: IPatient[] = await Patient.find(query)
             .populate({ path: 'reports.doctorId' })
             .populate({ path: 'reports.appointmentId' })
             .populate({ path: 'reports.invoiceId' })
+            .sort(sort)
         response.status(200).send(data)
     } catch (error) {
         next(error)
     }
+
 }
+
+
 
 // // Get All patient
 // export const getAllPatients = (request: Request, response: Response, next: NextFunction) => {

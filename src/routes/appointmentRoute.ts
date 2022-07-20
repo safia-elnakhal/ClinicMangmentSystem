@@ -3,9 +3,9 @@ import { body, param } from 'express-validator'
 import * as appointmentController from '../controllers/appointmentController'
 import validationMW from '../middlewares/validationMW'
 
-const routes = Router()
+const appointmentRoute = Router()
 
-routes
+appointmentRoute
     .route('/appointments')
     .get(appointmentController.getAllAppointments)
     .post(
@@ -57,7 +57,7 @@ routes
         appointmentController.createAppointment
     )
 
-routes
+appointmentRoute
     .route('/appointments/:id')
     .get(
         [
@@ -82,4 +82,4 @@ routes
         appointmentController.deleteAppointmentById
     )
 
-export default routes
+export default appointmentRoute
