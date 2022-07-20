@@ -8,8 +8,20 @@ export const getAllMedicines = async (
     res: Response,
     next: NextFunction
 ) => {
+    let sortType = req.query.sorting
+    let sort: {} = {}
+    if (sortType === 'ExpiredDateAsc') {
+        sort = { expirationDate: 1 }
+    } else if (sortType === 'ExpiredDateDsc') {
+        sort = { expirationDate: -1 }
+    }
+    else if (sortType === 'nameAZ') {
+        sort = { name: 1 }
+    } else if (sortType === 'nameZA') {
+        sort = { name: -1 }
+    }
     try {
-        const data: IMedicine[] = await Medicine.find({})
+        const data: IMedicine[] = await Medicine.find({}).sort(sort)
         res.status(200).send(data)
     } catch (error) {
         next(error)
