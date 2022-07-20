@@ -13,6 +13,7 @@ import employeeRoute from './routes/employeeRoute'
 import doctorRoutes from './routes/doctorRoutes'
 import patientRoutes from './routes/patientRoute'
 import clinicServicesRoute from './routes/clinicRoute'
+import loginRoute from './routes/loginRoute'
 
 require('dotenv').config()
 
@@ -35,6 +36,7 @@ app.use(cors())
 app.use(morgan(':method :url'))
 app.use(express.json())
 
+app.use(loginRoute)
 app.use(employeeRoute)
 app.use(doctorRoutes)
 app.use(patientRoutes)

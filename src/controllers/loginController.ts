@@ -1,103 +1,129 @@
-// import mongoose from "mongoose";
-// require("../models/adminModel");
-// require("../models/doctorModel");
-// require("../models/patientModel");
-// let Patient = mongoose.model("Patient");
-// let Doctor = mongoose.model("doctors");
-// let Employee = mongoose.model("Employee")
-// import jwt from "jsonwebtoken";
-// import bcrypt from "bcrypt";
-// import { Request, Response, NextFunction } from 'express'
+/* eslint-disable no-shadow */
+/* eslint-disable no-underscore-dangle */
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
+import { Request, Response, NextFunction } from 'express'
+import { token } from 'morgan'
 
-// export const loginPatient = (request:Request, response:Response, next:NextFunction) => {
-//   Patient.findOne({
-//     email: request.body.email,
-//     password: request.body.password,
-//   })
+require('../models/employeeModel')
+require('../models/doctorModel')
+require('../models/patientModel')
 
-//     .then((data:any) => {
-//       console.log(data);
-//       if (!data) {
-//         let error:any = new Error("email or password incorrect");
-//         error.status = 401;
-//         throw error;
-//       } else {
-//         bcrypt
-//           .compare(request.body.password, data.password)
-//           .then(function () {
-//             let token:any = jwt.sign(
-//               {
-//                 id: data._id,
-//                 role: "Patient",
-//               },
-//               process.env.secret,
-//               { expiresIn: "1h" }
-//             );
-//             response.status(200).json({ token, message: "login" });
-//           });
-//       }
-//     })
-//     .catch((error:Error) => next(error));
-// };
+const Patient = mongoose.model('Patient')
+const Doctor = mongoose.model('doctors')
+const Employee = mongoose.model('Employee')
+const jwt = require('jsonwebtoken')
 
-// export const loginDoctor = (request:Request, response:Response, next:NextFunction) => {
-//   Doctor.findOne({
-//     email: request.body.email,
-//     password: request.body.password,
-//   })
+export const loginPatient = (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    Patient.findOne({
+        email: request.body.email,
+        password: request.body.password,
+    })
 
-//     .then((data:any) => {
-//       console.log(data);
-//       if (!data) {
-//         let error:any = new Error("email or password incorrect");
-//         error.status = 401;
-//         throw error;
-//       } else {
-//         bcrypt
-//           .compare(request.body.password, data.password)
-//           .then(function () {
-//             let token :any = jwt.sign(
-//               {
-//                 id: data._id,
-//                 role: "Doctor",
-//               },
-//               process.env.secret,
-//               { expiresIn: "1h" }
-//             );
-//             response.status(200).json({ token, message: "login" });
-//           });
-//       }
-//     })
-//     .catch((error:Error) => next(error));
-// };
+        .then((data: any) => {
+            console.log(data)
+            if (!data) {
+                const error: any = new Error('email or password incorrect')
+                error.status = 401
+                throw error
+            } else {
+                bcrypt
+                    .compare(request.body.password, data.password)
+                    .then(() => {
+                        const token: any = jwt.sign(
+                            {
+                                id: data._id,
+                                role: 'Patient',
+                            },
+                            process.env.secret,
+                            { expiresIn: '1h' }
+                        )
+                        response.status(200).json({ token, message: 'login' })
+                    })
+            }
+        })
+        .catch((error: Error) => next(error))
+}
 
-// export const loginEmployee = (request:Request, response:Response, next:NextFunction) => {
-//   Employee.findOne({
-//     email: request.body.email,
-//     password: request.body.password,
-//   })
+export const loginDoctor = (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    Doctor.findOne({
+        email: request.body.email,
+        password: request.body.password,
+    })
 
-//     .then((data:any) => {
-//       console.log(data);
-//       if (!data) {
-//         let error:any = new Error("email or password incorrect");
-//         error.status = 401;
-//         throw error;
-//       } else {
-//         bcrypt
-//           .compare(request.body.password, data.password)
-//           .then(function () {
-//             let token :any = jwt.sign(
-//               {
-//                 id: data._id,
-//                 role: "Employee",
-//               },
-//               process.env.secret,
-//               { expiresIn: "1h" }
-//             );
-//             response.status(200).json({ token, message: "login" });
-//           });
-//       }
-//     })
-//     .catch((error:Error) => next(error));
-// };
+        .then((data: any) => {
+            console.log(data)
+            if (!data) {
+                const error: any = new Error('email or password incorrect')
+                error.status = 401
+                throw error
+            } else {
+                bcrypt
+                    .compare(request.body.password, data.password)
+                    .then(() => {
+                        const token: any = jwt.sign(
+                            {
+                                id: data._id,
+                                role: 'Doctor',
+                            },
+                            process.env.secret,
+                            { expiresIn: '1h' }
+                        )
+                        response.status(200).json({ token, message: 'login' })
+                    })
+            }
+        })
+        .catch((error: Error) => next(error))
+}
+
+export const loginEmployee = (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    Employee.findOne(
+        {
+            email: request.body.email,
+            password: request.body.password,
+            role: request.body.role,
+        },
+        { role: 1 }
+    )
+        .then((data: any) => {
+            if (!data) {
+                const error: any = new Error('email or password incorrect')
+                error.status = 401
+                throw error
+            } else if (data.role === 'admin') {
+                const token: any = jwt.sign(
+                    {
+                        id: data._id,
+                        role: 'admin',
+                    },
+                    process.env.secret,
+                    { expiresIn: '1h' }
+                )
+                response.status(200).json({ token, message: 'login' })
+            } else if (data.role === 'employee') {
+                const token: any = jwt.sign(
+                    {
+                        id: data._id,
+                        role: 'employee',
+                    },
+                    process.env.secret,
+                    { expiresIn: '1h' }
+                )
+                response.status(200).json({ token, message: 'login' })
+            }
+            response.status(200).json({ token, message: 'login' })
+        })
+        .catch((error: Error) => next(error))
+}

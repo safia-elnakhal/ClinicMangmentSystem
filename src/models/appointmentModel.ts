@@ -1,0 +1,33 @@
+import { Schema, Types, model } from 'mongoose'
+
+interface IAppointment {
+    doctorId?: Types.ObjectId
+    patientId?: Types.ObjectId
+    date: Date
+    reasonOfVisit: string
+}
+
+const appointmentSchema = new Schema<IAppointment>({
+    patientId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Patient',
+        required: true,
+    },
+    doctorId: {
+        type: Schema.Types.ObjectId,
+        ref: 'doctors',
+        required: true,
+    },
+    date: {
+        type: Date,
+        required: true,
+    },
+    reasonOfVisit: {
+        type: String,
+        required: true,
+    },
+})
+
+const Appointment = model<IAppointment>('appointments', appointmentSchema)
+
+export { Appointment, IAppointment }

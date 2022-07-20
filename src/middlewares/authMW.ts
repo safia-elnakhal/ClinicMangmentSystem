@@ -1,15 +1,15 @@
-import { Request, Response, NextFunction } from 'express'
+import { Response, NextFunction } from 'express'
 
 const jwt = require('jsonwebtoken')
 
-export default (request: any, response: Response, next: NextFunction) => {
-    let decodedToken = null
+module.exports = (request: any, response: Response, next: NextFunction) => {
+    let decodedToekn = null
     try {
         const token: string = request.get('Authorization').split(' ')[1]
-        decodedToken = jwt.verify(token, process.env.secret)
-        console.log(decodedToken)
-        request.role = decodedToken.role
-        request.id = decodedToken.id
+        decodedToekn = jwt.verify(token, process.env.secret)
+        console.log(decodedToekn)
+        request.role = decodedToekn.role
+        request.id = decodedToekn.id
         next()
     } catch (error: any) {
         error.message = 'Not Authorized'
