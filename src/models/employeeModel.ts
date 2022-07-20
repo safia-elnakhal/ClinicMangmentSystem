@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-import-module-exports
 import { Schema, model } from 'mongoose'
 
 // eslint-disable-next-line no-unused-vars, no-shadow
@@ -23,7 +22,7 @@ interface IEmployee {
     name: string
     email: string
     password: string
-    typeofEmployee?: 'management' | 'nursing' | 'reception'
+    typeofEmployee?: EmployeeType
     role?: role
 }
 
