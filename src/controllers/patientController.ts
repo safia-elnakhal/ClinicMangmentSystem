@@ -1,20 +1,20 @@
 import { Request, Response, NextFunction } from 'express'
-// require("../models/patientModel");
-// let Patient = mongoose.model("Patient");
+import convertString from '../utilities/convertString'
 
 import { Patient, IPatient } from '../models/patientModel'
 
-const mongoose = require('mongoose')
-
 // Get All patient
 export const getAllPatients = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
-        const data: IPatient[] = await Patient.find({}).populate({ path: 'reports.doctorId' }).populate({ path: 'reports.appointmentId' }).populate({ path: 'reports.invoiceId' })
-        res.status(200).send(data)
+        const data: IPatient[] = await Patient.find({})
+            .populate({ path: 'reports.doctorId' })
+            .populate({ path: 'reports.appointmentId' })
+            .populate({ path: 'reports.invoiceId' })
+        response.status(200).send(data)
     } catch (error) {
         next(error)
     }
@@ -33,18 +33,21 @@ export const getAllPatients = async (
 
 // Get patient ByID
 export const getPatientsById = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
     // eslint-disable-next-line consistent-return
 ) => {
     try {
         const data: IPatient | null = await Patient.findOne({
-            _id: req.params.id,
-        }).populate({ path: 'reports.doctorId' }).populate({ path: 'reports.appointmentId' }).populate({ path: 'reports.invoiceId' })
+            _id: request.params.id,
+        })
+            .populate({ path: 'reports.doctorId' })
+            .populate({ path: 'reports.appointmentId' })
+            .populate({ path: 'reports.invoiceId' })
 
         if (data) {
-            return res.status(200).send(data)
+            return response.status(200).send(data)
         }
         next(new Error(' patient not found'))
     } catch (error) {
@@ -70,16 +73,16 @@ export const getPatientsById = async (
 
 // Create patient
 export const createPatient = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
-        const data: IPatient = req.body
+        const data: IPatient = request.body
 
         const object = await Patient.create(data)
 
-        res.status(201).json(object)
+        response.status(201).json(object)
     } catch (error) {
         next(error)
     }
@@ -109,21 +112,24 @@ export const createPatient = async (
 
 // UpdatePatient
 export const updatePatient = async (
-    req: Request,
-    res: Response,
+    request: Request,
+    response: Response,
     next: NextFunction
 ) => {
     try {
-        const data: IPatient | null = await Patient.findOneAndUpdate(
-            { _id: mongoose.Types.ObjectId(req.body.id) },
-            { $set: req.body }
+        const data = await Patient.updateOne(
+            { _id: convertString.toObjectId(request.body.id) },
+            { $set: request.body }
         )
 
-        if (!data) {
-            throw new Error('patient not found')
+        if (!data.acknowledged) {
+            throw new Error('entered data not follow schema')
         }
+        if (data.matchedCount < 1) throw new Error('Patient not found')
+        if (data.modifiedCount < 1)
+            throw new Error('no update happened to Patient')
 
-        res.status(200).json({ message: 'modified patient' })
+        response.status(200).json({ message: 'modified patient' })
     } catch (error) {
         next(error)
     }
@@ -154,7 +160,7 @@ export const deletePatientById = async (
 ) => {
     try {
         const data = await Patient.deleteOne({
-            _id: mongoose.Types.ObjectId(request.body.id),
+            _id: convertString.toObjectId(request.body.id),
         })
         if (data.deletedCount < 1) throw new Error('patient  not found')
         response.status(200).json({ message: 'patient deleted' })
