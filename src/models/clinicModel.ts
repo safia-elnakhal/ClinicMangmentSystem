@@ -1,4 +1,5 @@
 import { Schema, Types, model, Document } from 'mongoose'
+import validator from 'validator'
 
 type Address = {
     city: string
@@ -24,6 +25,7 @@ const addressSchema: Schema = new Schema<Address>({
 interface IServices extends Document {
     name: string
     description: string
+    price: string
     doctorId: Types.Array<Types.ObjectId>
     patientId?: Types.Array<Types.ObjectId>
 }
@@ -51,14 +53,19 @@ const clinicSchema: Schema = new Schema<IClinic>(
         contactNumber: {
             type: String,
             required: true,
-        },
-        doctorId: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'doctors',
-                required: true,
+            validate(value: string) {
+                if (!validator.isMobilePhone(value, 'ar-EG')) {
+                    throw new Error('Phone Number is invalid in Egypt.')
+                }
             },
-        ],
+        },
+        // doctorId: [
+        //     {
+        //         type: Schema.Types.ObjectId,
+        //         ref: 'doctors',
+        //         required: true,
+        //     },
+        // ],
         employeeId: [
             {
                 type: Schema.Types.ObjectId,
@@ -71,12 +78,15 @@ const clinicSchema: Schema = new Schema<IClinic>(
                 name: {
                     type: String,
                     required: true,
-                    unique: true,
                 },
                 description: {
                     type: String,
                 },
-
+                price: {
+                    type: Number,
+                    get: (v: number) => (v / 100).toFixed(2),
+                    set: (v: number) => v * 100,
+                },
                 doctorId: [
                     {
                         type: Schema.Types.ObjectId,
@@ -92,9 +102,7 @@ const clinicSchema: Schema = new Schema<IClinic>(
             },
         ],
     },
-    {
-        timestamps: true,
-    }
+    { toJSON: { getters: true }, timestamps: true }
 )
 
 const Clinic = model<IClinic>('clinics', clinicSchema)
