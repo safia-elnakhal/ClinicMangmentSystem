@@ -43,7 +43,6 @@ export const getDoctorByID = (request: any, response: any, next: any) => {
 
 // Create Doctors
 
-// Create patient
 export const createDoctor = async (
     req: Request,
     res: Response,
@@ -76,6 +75,27 @@ export const createDoctor = async (
 // }
 
 // Update Doctor By Id
+
+export const getPatientsById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+    // eslint-disable-next-line consistent-return
+) => {
+    try {
+        const data: IDoctor | null = await Doctor.findOne({
+            _id: req.params.id,
+        })
+
+        if (data) {
+            return res.status(200).send(data)
+        }
+        next(new Error(' Doctor not found'))
+    } catch (error) {
+        next(error)
+    }
+}
+
 // export const updateDoctor = (request: any, response: any, next: any) => {
 //     // console.log(request.body.id);
 //     Doctor.findById(request.body.id)
