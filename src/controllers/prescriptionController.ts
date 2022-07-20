@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-
 import convertString from '../utilities/convertString'
+
 import { Prescription, IPrescription } from '../models/prescriptionModel'
 import { Patient as patientModel } from '../models/patientModel'
 import { Doctor as doctorModel } from '../models/doctorModel'
