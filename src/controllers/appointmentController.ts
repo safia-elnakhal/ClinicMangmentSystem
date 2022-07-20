@@ -10,9 +10,17 @@ export const getAllAppointments = async (
     next: NextFunction
 ) => {
     try {
+        let sortType = request.query.sorting
+        let sort: {} = {}
+
+        if (sortType === 'MostRecent') {
+            sort = { date: -1 }
+        }
+
         const data: IAppointment[] = await Appointment.find({})
-            .populate({ path: 'patientId' })
-            .populate({ path: 'doctorId' })
+            .populate({ path: "patientId" })
+            .populate({ path: "doctorId" })
+            .sort(sort)
         response.status(200).send(data)
     } catch (error) {
         next(error)
@@ -27,11 +35,14 @@ export const getAppointmentById = async (
     // eslint-disable-next-line consistent-return
 ) => {
     try {
+
+
         const data: IAppointment | null = await Appointment.findOne({
             _id: request.params.id,
         })
             .populate({ path: 'patientId' })
             .populate({ path: 'doctorId' })
+
 
         if (data) {
             return response.status(200).send(data)

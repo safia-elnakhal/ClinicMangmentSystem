@@ -7,7 +7,7 @@ import authMW from '../middlewares/authMW'
 const routes = Router()
 
 routes
-    .route('/employee')
+    .route('/employees')
     .get(Controller.getAllEmployees)
     .post(
         authMW,
@@ -71,7 +71,7 @@ routes
     )
 
 routes
-    .route('/employee/:id')
+    .route('/employees/:id')
     .get(
         [param('id').isMongoId().withMessage('employee id should be objectId')],
         validationMW,

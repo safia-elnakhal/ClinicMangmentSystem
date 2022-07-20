@@ -53,6 +53,10 @@ const clinicSchema: Schema = new Schema<IClinic>(
         },
         contactNumber: {
             type: String,
+            match: [
+                /^(002)?^01[1205][0-9]{8}$/,
+                'Please fill a valid phone number',
+            ],
             required: true,
         },
         doctorId: {
