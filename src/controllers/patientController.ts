@@ -3,6 +3,19 @@ import convertString from '../utilities/convertString'
 
 import { Patient, IPatient } from '../models/patientModel'
 
+import EmailClient from '../utilities/sendEmail'
+
+const invoiceEmailNotifier = new EmailClient()
+async function notifyUser(patientInfo: any): Promise<boolean> {
+    const patientMsgState = await invoiceEmailNotifier.sendMessage(
+        'user_creation',
+        patientInfo.name,
+        patientInfo.email
+    )
+
+    return patientMsgState
+}
+
 // Get All patient
 export const getAllPatients = async (
     request: Request,
@@ -82,7 +95,8 @@ export const createPatient = async (
 
         const object = await Patient.create(data)
 
-        response.status(201).json(object)
+        const isEmailSentToUser = await notifyUser(data)
+        response.status(201).json({ createdPatient: object, isEmailSentToUser })
     } catch (error) {
         next(error)
     }
