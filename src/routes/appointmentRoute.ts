@@ -1,17 +1,17 @@
 import { Router } from 'express'
 import * as Controller from '../controllers/appointmentController'
 
-const routes = Router()
+const appointmentRoute = Router()
 
-routes
+appointmentRoute
     .route('/appointment')
     .get(Controller.getAllAppointments)
     .post(Controller.getAppointmentById)
     .put(Controller.createAppointment)
 
-routes
+appointmentRoute
     .route('/appointment/:id')
     .get(Controller.updateAppointment)
     .delete(Controller.deleteAppointmentById)
 
-export default routes
+export default appointmentRoute
