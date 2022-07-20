@@ -10,7 +10,7 @@ require('../models/doctorModel')
 require('../models/patientModel')
 
 const Patient = mongoose.model('Patient')
-const Doctor = mongoose.model('doctors')
+const Doctor = mongoose.model('Doctor')
 const Employee = mongoose.model('Employee')
 const jwt = require('jsonwebtoken')
 
