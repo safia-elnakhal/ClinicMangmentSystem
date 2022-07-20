@@ -6,11 +6,13 @@ import mongoose from 'mongoose'
 import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcrypt'
 
-require('../models/employeeModel')
+// const Employee = mongoose.model('Employee')
+
+import { Employee, IEmployee } from '../models/employeeModel'
+
+// require('../models/employeeModel')
 
 const saltRounds = 10
-
-const Employee = mongoose.model('Employee')
 
 // Get All Employees
 export const getAllEmployees = (
