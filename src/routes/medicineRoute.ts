@@ -22,7 +22,7 @@ medicineRoute
             body('expirationDate')
                 .optional()
                 .isDate()
-                .withMessage('medicine description must be a date'),
+                .withMessage('medicine expirationDate must be a date'),
             body('takingInstructions')
                 .optional()
                 .isAlphanumeric('en-US', { ignore: ' ' })
@@ -63,7 +63,7 @@ medicineRoute
             body('expirationDate')
                 .optional()
                 .isDate()
-                .withMessage('medicine description must be a date'),
+                .withMessage('medicine expirationDate must be a date'),
             body('takingInstructions')
                 .optional()
                 .isAlphanumeric('en-US', { ignore: ' ' })
