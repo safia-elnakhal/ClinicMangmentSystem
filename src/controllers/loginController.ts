@@ -3,7 +3,6 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express'
-import { token } from 'morgan'
 
 require('../models/employeeModel')
 require('../models/doctorModel')
@@ -93,7 +92,7 @@ export const loginEmployee = (
         {
             email: request.body.email,
             password: request.body.password,
-            role: request.body.role,
+            // role: request.body.role,
         },
         { role: 1 }
     )
@@ -123,7 +122,6 @@ export const loginEmployee = (
                 )
                 response.status(200).json({ token, message: 'login' })
             }
-            response.status(200).json({ token, message: 'login' })
         })
         .catch((error: Error) => next(error))
 }
