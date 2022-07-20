@@ -28,7 +28,6 @@ export const getAllPatients = async (
         let filterGender = request.query.gender
         let filtermaxAge = request.query.maxAge
         let filterminAge = request.query.minAge
-        let searchFilter = request.query.searchName
 
         let filter: {} = {}
         let sort: {} = {}
