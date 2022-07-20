@@ -21,8 +21,8 @@ routes
         },
         [
             body('name')
-                .isString()
-                .withMessage('employee name should be string'),
+                .isAlpha('en-US', { ignore: '' })
+                .withMessage('employee Name Must Be Characters'),
             body('email')
                 .isEmail()
                 .withMessage('employee Email should be Email'),
@@ -51,8 +51,8 @@ routes
         },
         [
             body('name')
-                .isString()
-                .withMessage('employee name should be string'),
+                .isAlpha('en-US', { ignore: '' })
+                .withMessage('employee Name Must Be Characters'),
             body('email')
                 .isEmail()
                 .withMessage('employee Email should be Email'),
