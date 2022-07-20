@@ -1,6 +1,6 @@
-import { Schema, Types, model } from 'mongoose'
+import { Schema, Types, model, Document } from 'mongoose'
 
-interface IAppointment {
+interface IAppointment extends Document {
     doctorId?: Types.ObjectId
     patientId?: Types.ObjectId
     date: Date
