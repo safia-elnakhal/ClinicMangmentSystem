@@ -11,7 +11,6 @@ export const createClinic = async (
     next: NextFunction
 ) => {
     try {
-<<<<<<< HEAD
         console.log(request.body.employeeId)
         const employeeArray: Array<Types.ObjectId> = request.body.employeeId
         employeeArray.forEach(async (employeeId) => {
@@ -22,9 +21,6 @@ export const createClinic = async (
                 throw new Error(`${employeeId} is not  valid employeeId`)
         })
         //! gives error if employeeId doesn't exist but saves in the database
-=======
-
->>>>>>> origin/main
         const clinicProperties: IClinic = request.body
         const clinicObject = new Clinic(clinicProperties)
         const data = await clinicObject.save()
