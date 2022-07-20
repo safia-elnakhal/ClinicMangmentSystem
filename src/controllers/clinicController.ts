@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
+import { Types } from 'mongoose'
+
 import { Clinic, IClinic } from '../models/clinicModel'
+import { Employee, IEmployee } from '../models/employeeModel'
 
 export const createClinic = async (
     request: Request,
@@ -7,14 +10,25 @@ export const createClinic = async (
     next: NextFunction
 ) => {
     try {
+        console.log(request.body.employeeId)
+        const employeeArray: Array<Types.ObjectId> = request.body.employeeId
+        employeeArray.forEach(async (employeeId) => {
+            const isEmployeeValid = await Employee.exists({
+                _id: employeeId,
+            })
+            if (!isEmployeeValid)
+                throw new Error(`${employeeId} is not  valid employeeId`)
+        })
+        //! gives error if employeeId doesn't exist but saves in the database
         const clinicProperties: IClinic = request.body
         const clinicObject = new Clinic(clinicProperties)
-        await clinicObject.save()
-        response.status(201).json({ data: 'New Clinic Added' })
+        const data = await clinicObject.save()
+        response.status(201).json(data)
     } catch (error) {
         next(error)
     }
 }
+
 // Get Clinic Data
 export const getAllClinicData = async (
     request: Request,
@@ -39,15 +53,12 @@ export const getAllClinicServices = async (
     next: NextFunction
 ) => {
     try {
-        const data: IClinic[] = await Clinic.find({}, { services: 1 })
-            .populate({
-                path: 'doctorId',
-                select: { name: 1, email: 1, specialty: 1 },
-            })
-            .populate({
+        const data: IClinic[] = await Clinic.find({}, { services: 1 }).populate(
+            {
                 path: 'employeeId',
                 select: { name: 1, typeofEmployee: 1, role: 1 },
-            })
+            }
+        )
         response.status(200).json({
             ClinicServices: data,
         })
@@ -69,7 +80,7 @@ export const getClinicServiceById = async (
             },
             { services: 1 }
         ).populate({
-            path: 'doctorId',
+            path: 'services.doctorId',
             select: { name: 1, email: 1, specialty: 1 },
         })
         console.log(request.params)
