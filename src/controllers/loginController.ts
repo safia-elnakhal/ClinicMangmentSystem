@@ -4,13 +4,17 @@ import mongoose from 'mongoose'
 import bcrypt from 'bcrypt'
 import { Request, Response, NextFunction } from 'express'
 
-require('../models/employeeModel')
-require('../models/doctorModel')
-require('../models/patientModel')
+import { Employee } from '../models/employeeModel'
+import { Doctor } from '../models/doctorModel'
+import { Patient } from '../models/patientModel'
 
-const Patient = mongoose.model('Patient')
-const Doctor = mongoose.model('Doctor')
-const Employee = mongoose.model('Employee')
+// require('../models/employeeModel')
+// require('../models/doctorModel')
+// require('../models/patientModel')
+
+// const Patient = mongoose.model('Patient')
+// const Doctor = mongoose.model('Doctor')
+// const Employee = mongoose.model('Employee')
 const jwt = require('jsonwebtoken')
 
 export const loginPatient = (
