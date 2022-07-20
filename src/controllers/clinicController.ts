@@ -9,6 +9,7 @@ export const createClinic = async (
     next: NextFunction
 ) => {
     try {
+
         const clinicProperties: IClinic = request.body
         const clinicObject = await new Clinic(clinicProperties)
         await clinicObject.save()
@@ -40,7 +41,17 @@ export const getAllClinicServices = async (
     next: NextFunction
 ) => {
     try {
-        const data: IClinic[] = await Clinic.find({}, { services: 1 })
+
+        // http://localhost:8080/clinics/services?service=eyesight
+        // http://localhost:8080/clinics/services?service=eyelasic
+
+        let serviceSort = request.query.serviceName
+        let filter: {} = {}
+        if (serviceSort) {
+            filter = { 'services.name': serviceSort }
+        }
+
+        const data: IClinic[] = await Clinic.find(filter, { services: 1 })
         response.status(200).json({
             ClinicServices: data,
         })
