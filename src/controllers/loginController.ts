@@ -23,7 +23,7 @@ export const loginPatient = (
 ) => {
     Patient.findOne({
         email: request.body.email,
-        password: request.body.password,
+        // password: request.body.password,
     })
 
         .then((data: any) => {
@@ -58,7 +58,7 @@ export const loginDoctor = (
 ) => {
     Doctor.findOne({
         email: request.body.email,
-        password: request.body.password,
+        // password: request.body.password,
     })
 
         .then((data: any) => {
@@ -94,7 +94,7 @@ export const loginEmployee = (
     Employee.findOne(
         {
             email: request.body.email,
-            password: request.body.password,
+            // password: request.body.password,
             // role: request.body.role,
         },
         { role: 1 }

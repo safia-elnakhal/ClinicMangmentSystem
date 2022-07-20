@@ -21,7 +21,7 @@ routes
         },
         [
             body('name')
-                .isAlpha('en-US', { ignore: '' })
+                .isAlpha('en-US', { ignore: ' ' })
                 .withMessage('employee Name Must Be Characters'),
             body('email')
                 .isEmail()
