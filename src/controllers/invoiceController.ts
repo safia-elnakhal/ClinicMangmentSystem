@@ -33,7 +33,7 @@ export const getAllInvoices = async (
     next: NextFunction
 ) => {
     try {
-        let sortType = req.query.sorting
+        let sortType = request.query.sorting
         let sort: {} = {}
         if (sortType === 'HightoLow') {
             sort = { charge: -1 }
