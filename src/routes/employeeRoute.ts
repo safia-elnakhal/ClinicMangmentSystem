@@ -6,7 +6,7 @@ import validationMW from '../middlewares/validationMW'
 const routes = Router()
 
 routes
-    .route('/employee')
+    .route('/employees')
     .get(Controller.getAllEmployees)
     .post(
         [
@@ -52,7 +52,7 @@ routes
     )
 
 routes
-    .route('/employee/:id')
+    .route('/employees/:id')
     .get(
         [param('id').isMongoId().withMessage('employee id should be objectId')],
         validationMW,
